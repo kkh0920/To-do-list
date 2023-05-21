@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,11 @@ public interface TaskDao {
     @Query("SELECT * FROM task") // 불러오기
     List<Task> getAll();
 
-    @Query("UPDATE task SET is_checked = :isChecked WHERE ID = :sID") // 체크박스 수정
-    void updateCheckBox(int sID, Boolean isChecked);
-
     @Insert // 삽입
     void insertAll(Task... tasks);
+
+    @Update
+    public void update(Task task);
 
     @Delete // 삭제
     void delete(Task task);

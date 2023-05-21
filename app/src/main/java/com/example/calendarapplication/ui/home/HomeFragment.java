@@ -32,7 +32,10 @@ import com.google.android.material.snackbar.Snackbar;
 import org.w3c.dom.Text;
 
 import java.io.Console;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
@@ -90,6 +93,8 @@ public class HomeFragment extends Fragment {
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
 
+        updateDday();
+
         adapter = new TaskAdapter(taskArrayList);
 
         recyclerView.setAdapter(adapter);
@@ -99,13 +104,46 @@ public class HomeFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public void mOnPopupClick(){
-        // 팝업(액티비티) 화면을 호출
+    // 팝업(액티비티) 화면을 호출
+    public void mOnPopupClick() {
         Intent intent = new Intent(getContext(), PopupActivity.class);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         launcher.launch(intent);
     }
 
+    // D-Day 갱신
+    public void updateDday(){
+        int i = 0;
+        while(i < taskArrayList.size()){
+            Task task = taskArrayList.get(i);
+            int updatedDeadline = getCalculatedDeadline(task.getMonth(), task.getDay());
+            if(updatedDeadline < 0) {
+                taskArrayList.remove(task);
+                taskDB.taskDao().delete(task);
+                continue;
+            }
+
+            task.setDeadline(Integer.toString(updatedDeadline));
+            taskDB.taskDao().update(task);
+            i++;
+        }
+    }
+
+    // 마감일 까지 남은 날짜 계산
+    public int getCalculatedDeadline(String month, String day){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Calendar todayCalendar = Calendar.getInstance();
+        Calendar estimateCalendar = Calendar.getInstance();
+
+        estimateCalendar.set(Calendar.YEAR, todayCalendar.get(Calendar.YEAR));
+        estimateCalendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+        estimateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+
+        long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
+        int deadline = (int) (diff / (24 * 60 * 60 * 1000));
+
+        return deadline;
+    }
 
     // 팝업창에 입력된 내용, 마감일을 받아오기 위해,
     // Activity Result API에서 제공하는 registerForActivityResult() API를 사용하여 값을 받아옴.
@@ -119,12 +157,17 @@ public class HomeFragment extends Fragment {
 
                         // 데이터 받기오기
                         Intent intent = result.getData();
+
                         String name = intent.getStringExtra("name");
                         String month = intent.getStringExtra("month");
                         String day = intent.getStringExtra("day");
+                        String estimatedDay = intent.getStringExtra("estimatedDay");
+
+                        // D-Day 계산
+                        int deadline = getCalculatedDeadline(month, day);
 
                         // 데이터 추가
-                        Task task = new Task(name, month, day, false);
+                        Task task = new Task(name, month, day, Integer.toString(deadline), estimatedDay, false);
                         TaskDB.getInstance(getContext()).taskDao().insertAll(task);
 
                         // 데이터 로딩

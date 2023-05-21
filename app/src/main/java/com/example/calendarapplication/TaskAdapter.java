@@ -1,5 +1,6 @@
 package com.example.calendarapplication;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 // 사용자에게 보여지는 RecyclerView 와 데이터를 담고있는 ArrayList 사이를 매개하는 TaskAdapter(일정 관리를 담당)
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
@@ -34,6 +38,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Task item = items.get(position);
 
+        int deadline = Integer.parseInt(item.getDeadline());
+        int estimatedDay = Integer.parseInt(item.getEstimatedDay());
+
+        // 예상 수행 일자, 마감일 색상 변환
+        changeDayColor(holder, deadline, estimatedDay);
+
+        // 체크 박스 상태 변화
         holder.setItem(item);
 
         holder.checkBox.setOnCheckedChangeListener(null);
@@ -44,17 +55,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 Task task = items.get(holder.getAdapterPosition());
                 final int sID = task.getId();
 
+                task.setIsChecked(isChecked);
+
                 /* 체크박스 상태 업데이트 => 원래 데이터베이스는 메인 스레드에서 접근하면 안되지만, 간단한 구현을 위해
                    allowMainThreadQueries() 구문을 사용.*/
                 TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
 
-                updatedTask.taskDao().updateCheckBox(sID, isChecked);
+                updatedTask.taskDao().update(task);
 
-                item.setIsChecked(isChecked);
                 notifyDataSetChanged();
             }
         });
 
+        // 삭제 버튼 기능
         holder.btn_delete.setTag(holder.getAdapterPosition());
         holder.btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,26 +115,48 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         items.sort(Task::compareTo);
     }
 
+    public void changeDayColor(ViewHolder holder, int deadline, int estimatedDay){
+        if(deadline - estimatedDay <= 0){
+            holder.tv_estimatedDay.setTextColor(Color.parseColor("#ff0000"));
+            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#ff0000"));
+
+            holder.tv_deadline.setTextColor(Color.parseColor("#ff0000"));
+            holder.tv_deadline_format.setTextColor(Color.parseColor("#ff0000"));
+        }
+        else{
+            holder.tv_estimatedDay.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#7A7777"));
+
+            holder.tv_deadline.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_deadline_format.setTextColor(Color.parseColor("#7A7777"));
+        }
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         private TextView tv_task_name;
-        private TextView tv_month;
-        private TextView tv_day;
+        private TextView tv_deadline, tv_deadline_format;
+        private TextView tv_estimatedDay, tv_estimated_day_format;
         private CheckBox checkBox;
         private Button btn_delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_task_name = itemView.findViewById(R.id.tv_task_name);
-            tv_month = itemView.findViewById(R.id.tv_month);
-            tv_day = itemView.findViewById(R.id.tv_day);
+
+            tv_deadline = itemView.findViewById(R.id.tv_deadline);
+            tv_deadline_format = itemView.findViewById(R.id.tv_deadline_format);
+
+            tv_estimatedDay = itemView.findViewById(R.id.tv_estimated_day);
+            tv_estimated_day_format = itemView.findViewById(R.id.tv_estimated_day_format);
+
             checkBox = itemView.findViewById(R.id.checkBox);
+
             btn_delete = itemView.findViewById(R.id.btn_delete);
         }
         public void setItem(final Task item){
             tv_task_name.setText(item.getTaskName());
-            tv_month.setText(item.getMonth());
-            tv_day.setText(item.getDay());
+            tv_deadline.setText(item.getDeadline());
+            tv_estimatedDay.setText(item.getEstimatedDay());
         }
     }
 }

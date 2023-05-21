@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    android:layout_width="300dp"
+    android:layout_width="310dp"
     android:layout_height="wrap_content">
-
 
     <LinearLayout
         android:padding="24dp"
@@ -19,7 +18,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="일정 "
+                android:text="일정    "
                 android:textSize="17dp"
                 android:textColor="@color/black"/>
 
@@ -32,6 +31,7 @@
                 android:layout_marginBottom="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="10"
                 android:hint="내용"/>
 
         </LinearLayout>
@@ -74,6 +74,28 @@
                 android:inputType="number"
                 android:maxLength="2"
                 android:hint="일"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:text="예상수행일자"
+                android:textSize="17dp"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/et_estimated_day"
+                android:textSize="15sp"
+                android:textColor="#000"
+                android:alpha="0.87"
+                android:gravity="center"
+                android:layout_marginBottom="3dp"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="3"
+                android:hint="일"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -84,12 +106,12 @@
         android:layout_width="match_parent"
         android:layout_height="1dp" />
 
-
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:text="취소"
             android:textSize="15sp"
@@ -111,6 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="53dp"
             android:onClick="mOnClose"/>
+
     </LinearLayout>
 
 

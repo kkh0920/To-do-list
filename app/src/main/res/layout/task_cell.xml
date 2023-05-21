@@ -28,40 +28,97 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/tv_task_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="Task"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_deadline_format"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="D - "
+                        android:textColor="#7A7777"
+                        android:textSize="17dp"/>
+                    <TextView
+                        android:id="@+id/tv_deadline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="365"
+                        android:textColor="#7A7777"
+                        android:textSize="17dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="  "
+                        android:textSize="17dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_task_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Task"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_month"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:text="05"-->
+<!--                        android:textSize="15sp"/>-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_format"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:text="-"-->
+<!--                        android:textSize="20sp"/>-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_day"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_marginRight="20dp"-->
+<!--                        android:text="10"-->
+<!--                        android:textSize="15sp"/>-->
+
                     <TextView
-                        android:id="@+id/tv_month"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="05"
+                        android:text="예상수행일자 : "
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_estimated_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="365"
+                        android:textColor="#7A7777"
                         android:textSize="15sp"/>
+
                     <TextView
-                        android:id="@+id/tv"
+                        android:id="@+id/tv_estimated_day_format"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="-"
-                        android:textSize="20sp"/>
-                    <TextView
-                        android:id="@+id/tv_day"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="20dp"
-                        android:text="10"
+                        android:text="日"
+                        android:textColor="#7A7777"
                         android:textSize="15sp"/>
+
                 </LinearLayout>
 
             </LinearLayout>

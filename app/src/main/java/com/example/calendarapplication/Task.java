@@ -11,17 +11,25 @@ public class Task implements Comparable<Task> {
     private int id;
     @ColumnInfo(name="task_name")
     private String taskName;
+
     @ColumnInfo(name="month")
     private String month;
     @ColumnInfo(name="day")
     private String day;
+    @ColumnInfo(name="deadline")
+    private String deadline;
+    @ColumnInfo(name="estimated_day")
+    private String estimatedDay;
+
     @ColumnInfo(name="is_checked")
     private Boolean isChecked;
 
-    public Task(String taskName, String month, String day, Boolean isChecked) {
+    public Task(String taskName, String month, String day, String deadline, String estimatedDay, Boolean isChecked) {
         this.taskName = taskName;
         this.month = month;
         this.day = day;
+        this.deadline = deadline;
+        this.estimatedDay = estimatedDay;
         this.isChecked = isChecked;
     }
 
@@ -41,6 +49,18 @@ public class Task implements Comparable<Task> {
         this.taskName = taskName;
     }
 
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getEstimatedDay() {
+        return estimatedDay;
+    }
+
     public String getMonth() {
         return month;
     }
@@ -57,6 +77,10 @@ public class Task implements Comparable<Task> {
         this.day = day;
     }
 
+    public void setEstimatedDay(String estimatedDay) {
+        this.estimatedDay = estimatedDay;
+    }
+
     public void setIsChecked(Boolean isChecked){
         this.isChecked = isChecked;
     }
@@ -67,15 +91,15 @@ public class Task implements Comparable<Task> {
 
     @Override
     public int compareTo(Task task) {
-        int m1 = Integer.parseInt(getMonth());
-        int m2 = Integer.parseInt(task.getMonth());
+        int dl1 = Integer.parseInt(getDeadline());
+        int dl2 = Integer.parseInt(task.getDeadline());
 
-        int d1 = Integer.parseInt(getDay());
-        int d2 = Integer.parseInt(task.getDay());
+        int ed1 = Integer.parseInt(getEstimatedDay());
+        int ed2 = Integer.parseInt(task.getEstimatedDay());
 
-        if(m1 == m2){
-            return d1 - d2;
+        if((dl1 - ed1) == (dl2 - ed2)){
+            return dl1 - dl2;
         }
-        return m1 - m2;
+        return (dl1 - ed1) - (dl2 - ed2);
     }
 }
