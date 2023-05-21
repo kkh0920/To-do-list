@@ -111,6 +111,7 @@ public class PopupActivity extends Activity {
         estimateCalendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
         estimateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
 
+
         long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
         int deadline = (int) (diff / (24 * 60 * 60 * 1000));
 

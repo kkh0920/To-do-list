@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center"
-                android:text="예상수행일자"
+                android:text="예상수행기간"
                 android:textSize="17dp"
                 android:textColor="@color/black"/>
 
