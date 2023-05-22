@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +117,13 @@ public class HomeFragment extends Fragment {
         int i = 0;
         while(i < taskArrayList.size()){
             Task task = taskArrayList.get(i);
-            int updatedDeadline = getCalculatedDeadline(task.getMonth(), task.getDay());
+
+            int year = Integer.parseInt(task.getYear());
+            int month = Integer.parseInt(task.getMonth());
+            int day = Integer.parseInt(task.getDay());
+
+            int updatedDeadline = getCalculatedDeadline(year, month, day);
+
             if(updatedDeadline < 0) {
                 taskArrayList.remove(task);
                 taskDB.taskDao().delete(task);
@@ -130,19 +137,18 @@ public class HomeFragment extends Fragment {
     }
 
     // 마감일 까지 남은 날짜 계산
-    public int getCalculatedDeadline(String month, String day){
+    public int getCalculatedDeadline(int year, int month, int day){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar todayCalendar = Calendar.getInstance();
         Calendar estimateCalendar = Calendar.getInstance();
 
-        estimateCalendar.set(Calendar.YEAR, todayCalendar.get(Calendar.YEAR));
-        estimateCalendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
-        estimateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+        estimateCalendar.set(Calendar.YEAR, year);
+        estimateCalendar.set(Calendar.MONTH, month - 1);
+        estimateCalendar.set(Calendar.DAY_OF_MONTH, day);
 
         long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
-        int deadline = (int) (diff / (24 * 60 * 60 * 1000));
 
-        return deadline;
+        return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
     // 팝업창에 입력된 내용, 마감일을 받아오기 위해,
@@ -159,15 +165,22 @@ public class HomeFragment extends Fragment {
                         Intent intent = result.getData();
 
                         String name = intent.getStringExtra("name");
-                        String month = intent.getStringExtra("month");
-                        String day = intent.getStringExtra("day");
+
+                        int year = intent.getIntExtra("year", 0);
+                        int month = intent.getIntExtra("month", 0);
+                        int day = intent.getIntExtra("day", 0);
+                        month++;
+
                         String estimatedDay = intent.getStringExtra("estimatedDay");
 
                         // D-Day 계산
-                        int deadline = getCalculatedDeadline(month, day);
+                        int deadline = getCalculatedDeadline(year, month, day);
 
                         // 데이터 추가
-                        Task task = new Task(name, month, day, Integer.toString(deadline), estimatedDay, false);
+                        Task task = new Task(name,
+                                Integer.toString(year), Integer.toString(month), Integer.toString(day),
+                                Integer.toString(deadline), estimatedDay, false);
+
                         TaskDB.getInstance(getContext()).taskDao().insertAll(task);
 
                         // 데이터 로딩

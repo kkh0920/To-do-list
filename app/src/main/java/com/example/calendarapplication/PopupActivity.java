@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,12 +22,16 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 // 팝업창 기능 구현
 public class PopupActivity extends Activity {
 
-    EditText et_task_name, et_month, et_day, et_estimated_day;
+    private Button bt_deadline;
+    private EditText et_task_name, et_estimated_day;
+    private int year = 0, month = 0, day = 0;
+    private DatePickerDialog.OnDateSetListener callbackMethod;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -34,42 +42,88 @@ public class PopupActivity extends Activity {
 
         setContentView(R.layout.activity_popup);
 
+        initialized();
+
+        // 달력 확인 버튼 클릭 이벤트
+        callbackMethod = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                year = i;
+                month = i1;
+                day = i2;
+
+                bt_deadline.setText(i + " / " + (i1 + 1) + " / " + i2);
+            }
+        };
+    }
+
+    public void initialized() {
         et_task_name = (EditText) findViewById(R.id.et_task_name);
-        et_month = (EditText) findViewById(R.id.et_month);
-        et_day = (EditText) findViewById(R.id.et_day);
         et_estimated_day = (EditText) findViewById(R.id.et_estimated_day);
+        bt_deadline = (Button) findViewById(R.id.bt_deadline);
+    }
+
+    public void onClickDeadlineButton(View v){
+        int year = Integer.parseInt(dateFormat("yyyy"));
+        int month = Integer.parseInt(dateFormat("MM"));
+        int day = Integer.parseInt(dateFormat("dd"));
+
+        DatePickerDialog dialog = new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
+
+        dialog.show();
+    }
+
+    public String dateFormat(String pattern) {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        return new SimpleDateFormat(pattern).format(date);
+    }
+
+    public int getCalculatedDeadline(){
+        Calendar todayCalendar = Calendar.getInstance();
+        Calendar estimateCalendar = Calendar.getInstance();
+
+        estimateCalendar.set(Calendar.YEAR, year);
+        estimateCalendar.set(Calendar.MONTH, month);
+        estimateCalendar.set(Calendar.DAY_OF_MONTH, day);
+
+        long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
+
+        return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
     // 확인 버튼 클릭
     public void mOnClose(View v) {
         String name = et_task_name.getText().toString();
-        String month = et_month.getText().toString();
-        String day = et_day.getText().toString();
         String estimatedDay = et_estimated_day.getText().toString();
 
-        int check = isAdequateData(month, day, estimatedDay);
-        // 데이터가 적합한지 체크(임시)
-        if(check == 1) {
-            // 데이터 전달하기
-            Intent intent = new Intent();
-
-            intent.putExtra("name", name);
-            intent.putExtra("month", month);
-            intent.putExtra("day", day);
-            intent.putExtra("estimatedDay", estimatedDay);
-
-            setResult(RESULT_OK, intent);
-
-            // 액티비티(팝업) 닫기
-            finish();
+        if(estimatedDay.length() == 0 || year == 0 || month  == 0 || day == 0){
+            Snackbar.make(v.getRootView(), "값을 입력하지 않으셨나요?", Snackbar.LENGTH_SHORT).show();
+            return;
         }
-        else if(check == -1){
-            // 적절하지 않은 데이터 입력 시 오류 메세지 출력
-            Snackbar.make(v.getRootView(), "입력하지 않았거나 잘못된 값을 입력하셨나요?", Snackbar.LENGTH_SHORT).show();
+
+        int e = Integer.parseInt(estimatedDay);
+
+        int deadline = getCalculatedDeadline();
+
+        if(deadline + 1 < e){
+            Snackbar.make(v.getRootView(), "수행 기간이 너무 길어요!", Snackbar.LENGTH_SHORT).show();
+            return;
         }
-        else{
-            Snackbar.make(v.getRootView(), "마감 기한 보다 수행 일자가 길지 않나요?", Snackbar.LENGTH_SHORT).show();
-        }
+
+        // 데이터 전달하기
+        Intent intent = new Intent();
+
+        intent.putExtra("name", name);
+        intent.putExtra("year", year);
+        intent.putExtra("month", month);
+        intent.putExtra("day", day);
+        intent.putExtra("estimatedDay", estimatedDay);
+
+        setResult(RESULT_OK, intent);
+
+        // 액티비티(팝업) 닫기
+        finish();
     }
 
     // 취소 버튼 클릭
@@ -77,45 +131,6 @@ public class PopupActivity extends Activity {
         setResult(RESULT_CANCELED);
         // 액티비티(팝업) 닫기
         finish();
-    }
-
-    // 입력된 데이터가 적절한 수 인지 체크하는 함수
-    public int isAdequateData(String month, String day, String estimatedDay){
-        // 날짜 입력이 잘못된 경우 오류 메세지 출력 후 false를 return.
-        if(month.length() == 0 || day.length() == 0 || estimatedDay.length() == 0){
-            return -1;
-        }
-
-        int m = Integer.parseInt(month);
-        int d = Integer.parseInt(day);
-        int e = Integer.parseInt(estimatedDay);
-        int deadline = getCalculatedDeadline(month, day);
-
-        if(deadline + 1 < e){
-            return 0;
-        }
-
-        if(m < 1 || m > 12 || d < 1 || d > 31 || e == 0){
-            return -1;
-        }
-
-        return 1;
-    }
-
-    public int getCalculatedDeadline(String month, String day){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        Calendar todayCalendar = Calendar.getInstance();
-        Calendar estimateCalendar = Calendar.getInstance();
-
-        estimateCalendar.set(Calendar.YEAR, todayCalendar.get(Calendar.YEAR));
-        estimateCalendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
-        estimateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-
-
-        long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
-        int deadline = (int) (diff / (24 * 60 * 60 * 1000));
-
-        return deadline;
     }
 
     @Override

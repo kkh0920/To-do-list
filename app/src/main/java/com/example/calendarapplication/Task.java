@@ -12,6 +12,8 @@ public class Task implements Comparable<Task> {
     @ColumnInfo(name="task_name")
     private String taskName;
 
+    @ColumnInfo(name="year")
+    private String year;
     @ColumnInfo(name="month")
     private String month;
     @ColumnInfo(name="day")
@@ -24,8 +26,9 @@ public class Task implements Comparable<Task> {
     @ColumnInfo(name="is_checked")
     private Boolean isChecked;
 
-    public Task(String taskName, String month, String day, String deadline, String estimatedDay, Boolean isChecked) {
+    public Task(String taskName, String year, String month, String day, String deadline, String estimatedDay, Boolean isChecked) {
         this.taskName = taskName;
+        this.year = year;
         this.month = month;
         this.day = day;
         this.deadline = deadline;
@@ -49,16 +52,12 @@ public class Task implements Comparable<Task> {
         this.taskName = taskName;
     }
 
-    public String getDeadline() {
-        return deadline;
+    public String getYear() {
+        return year;
     }
 
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
-
-    public String getEstimatedDay() {
-        return estimatedDay;
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public String getMonth() {
@@ -77,8 +76,17 @@ public class Task implements Comparable<Task> {
         this.day = day;
     }
 
+    public String getDeadline() {
+        return deadline;
+    }
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
     public void setEstimatedDay(String estimatedDay) {
         this.estimatedDay = estimatedDay;
+    }
+    public String getEstimatedDay() {
+        return estimatedDay;
     }
 
     public void setIsChecked(Boolean isChecked){

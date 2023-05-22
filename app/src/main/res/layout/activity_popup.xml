@@ -18,8 +18,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="일정    "
-                android:textSize="17dp"
+                android:text="일정  "
+                android:textSize="17sp"
                 android:textColor="@color/black"/>
 
             <EditText
@@ -31,8 +31,10 @@
                 android:layout_marginBottom="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="10"
-                android:hint="내용"/>
+                android:maxLength="12"
+                android:hint="내용"
+                android:textColorHint="#8E8888"
+                android:backgroundTint = "#8E8888"/>
 
         </LinearLayout>
 
@@ -41,47 +43,50 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <Button
+                android:id="@+id/bt_deadline"
+                android:layout_width="116dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:text="마감일 "
-                android:textSize="17dp"
-                android:textColor="@color/black"/>
+                android:textColor="#8E8888"
+                android:textSize="16sp"
+                android:onClick="onClickDeadlineButton"
+                android:background="@drawable/button_layout" />
 
-            <EditText
-                android:id="@+id/et_month"
-                android:textSize="15sp"
-                android:textColor="#000"
-                android:alpha="0.87"
-                android:gravity="center"
-                android:layout_marginBottom="3dp"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLength="2"
-                android:hint="월"/>
+<!--            <EditText-->
+<!--                android:id="@+id/et_month"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textColor="#000"-->
+<!--                android:alpha="0.87"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginBottom="3dp"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="number"-->
+<!--                android:maxLength="2"-->
+<!--                android:hint="월"/>-->
 
-            <EditText
-                android:id="@+id/et_day"
-                android:textSize="15sp"
-                android:textColor="#000"
-                android:alpha="0.87"
-                android:gravity="center"
-                android:layout_marginBottom="3dp"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:maxLength="2"
-                android:hint="일"/>
+<!--            <EditText-->
+<!--                android:id="@+id/et_day"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textColor="#000"-->
+<!--                android:alpha="0.87"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginBottom="3dp"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="number"-->
+<!--                android:maxLength="2"-->
+<!--                android:hint="일"/>-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center"
-                android:text="예상수행기간"
-                android:textSize="17dp"
+                android:text="예상수행기간 "
+                android:textSize="17sp"
                 android:textColor="@color/black"/>
 
             <EditText
@@ -95,7 +100,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:maxLength="3"
-                android:hint="일"/>
+                android:hint="일"
+                android:textColorHint="#8E8888"
+                android:backgroundTint="#8E8888"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -121,7 +128,7 @@
             android:background="#00000000"
             android:layout_width="wrap_content"
             android:layout_height="53dp"
-            android:onClick="mOnCancel"/>
+            android:onClick="mOnCancel" />
 
         <Button
             android:text="확인"

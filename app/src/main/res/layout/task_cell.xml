@@ -40,7 +40,7 @@
                         android:layout_gravity="center"
                         android:text="D - "
                         android:textColor="#7A7777"
-                        android:textSize="17dp"/>
+                        android:textSize="16sp"/>
                     <TextView
                         android:id="@+id/tv_deadline"
                         android:layout_width="wrap_content"
@@ -48,14 +48,14 @@
                         android:layout_gravity="center"
                         android:text="365"
                         android:textColor="#7A7777"
-                        android:textSize="17dp"/>
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="  "
-                        android:textSize="17dp"/>
+                        android:textSize="15sp"/>
 
                     <TextView
                         android:id="@+id/tv_task_name"
@@ -64,7 +64,7 @@
                         android:layout_gravity="center"
                         android:text="Task"
                         android:textColor="@color/black"
-                        android:textSize="20sp"/>
+                        android:textSize="18sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -108,7 +108,7 @@
                         android:layout_gravity="center"
                         android:text="365"
                         android:textColor="#7A7777"
-                        android:textSize="15sp"/>
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/tv_estimated_day_format"
@@ -117,7 +117,7 @@
                         android:layout_gravity="center"
                         android:text="日"
                         android:textColor="#7A7777"
-                        android:textSize="15sp"/>
+                        android:textSize="14sp"/>
 
                 </LinearLayout>
 
@@ -135,7 +135,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center|right"
                 android:layout_marginEnd="15dp"
-                android:backgroundTint="#6DD6F1" />
+                android:backgroundTint="#9DD4F3" />
 
         </LinearLayout>
 

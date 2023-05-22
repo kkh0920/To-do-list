@@ -45,7 +45,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 // 달력에서 날짜 클릭 시 수행되는 부분
-                loadData(month, dayOfMonth);
+                loadData(year, month, dayOfMonth);
             }
         });
 
@@ -63,25 +63,24 @@ public class DashboardFragment extends Fragment {
         rv_cal_task_list.setLayoutManager(layoutManager);
     }
 
-    public int getCalculatedDeadline(String month, String day){
+    public int getCalculatedDeadline(int year, int month, int day){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar todayCalendar = Calendar.getInstance();
         Calendar estimateCalendar = Calendar.getInstance();
 
-        estimateCalendar.set(Calendar.YEAR, todayCalendar.get(Calendar.YEAR));
-        estimateCalendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
-        estimateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+        estimateCalendar.set(Calendar.YEAR, year);
+        estimateCalendar.set(Calendar.MONTH, month);
+        estimateCalendar.set(Calendar.DAY_OF_MONTH, day);
 
         long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
-        int deadline = (int) (diff / (24 * 60 * 60 * 1000));
 
-        return deadline;
+        return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
-    public void loadData(int m, int d){
+    public void loadData(int y, int m, int d){
         /* 원래 데이터베이스는 메인 스레드에서 접근하면 안되지만, 간단한 구현을 위해
            allowMainThreadQueries() 구문을 사용*/
-        int diff = getCalculatedDeadline(Integer.toString(m + 1), Integer.toString(d));
+        int diff = getCalculatedDeadline(y, m, d);
 
         taskDB = TaskDB.getInstance(getContext());
 
