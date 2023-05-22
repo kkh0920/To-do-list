@@ -63,16 +63,6 @@ public class PopupActivity extends Activity {
         bt_deadline = (Button) findViewById(R.id.bt_deadline);
     }
 
-    public void onClickDeadlineButton(View v){
-        int year = Integer.parseInt(dateFormat("yyyy"));
-        int month = Integer.parseInt(dateFormat("MM"));
-        int day = Integer.parseInt(dateFormat("dd"));
-
-        DatePickerDialog dialog = new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
-
-        dialog.show();
-    }
-
     public String dateFormat(String pattern) {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -92,8 +82,22 @@ public class PopupActivity extends Activity {
         return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
-    // 확인 버튼 클릭
-    public void mOnClose(View v) {
+    public void onClickDeadlineButton(View v){
+        int year = Integer.parseInt(dateFormat("yyyy"));
+        int month = Integer.parseInt(dateFormat("MM"));
+        int day = Integer.parseInt(dateFormat("dd"));
+
+        DatePickerDialog dialog = new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
+
+        // 오늘 이전 날짜는 선택 불가
+        Calendar minDate = Calendar.getInstance();
+        minDate.set(year, month - 1, day);
+        dialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
+
+        dialog.show();
+    }
+
+    public void onClickOKButton(View v) {
         String name = et_task_name.getText().toString();
         String estimatedDay = et_estimated_day.getText().toString();
 
@@ -126,8 +130,7 @@ public class PopupActivity extends Activity {
         finish();
     }
 
-    // 취소 버튼 클릭
-    public void mOnCancel(View v) {
+    public void onClickCancelButton(View v) {
         setResult(RESULT_CANCELED);
         // 액티비티(팝업) 닫기
         finish();
