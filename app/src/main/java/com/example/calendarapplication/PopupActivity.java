@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -176,7 +177,9 @@ public class PopupActivity extends Activity {
 
         np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        setDividerColor(np, android.R.color.white);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            np.setSelectionDividerHeight(0);
+        }
 
         np.setWrapSelectorWheel(false);
 
@@ -205,25 +208,5 @@ public class PopupActivity extends Activity {
         });
 
         numberPickerDialog.show();
-    }
-
-    private void setDividerColor(NumberPicker picker, int color){
-        java.lang.reflect.Field[] pickerFields = NumberPicker.class.getDeclaredFields();
-        for(java.lang.reflect.Field pf : pickerFields){
-            if(pf.getName().equals("mSelectionDivider")){
-                pf.setAccessible(true);
-                try{
-                    ColorDrawable colorDrawable = new ColorDrawable(color);
-                    pf.set(picker, colorDrawable);
-                } catch (IllegalArgumentException e){
-                    e.printStackTrace();
-                } catch (Resources.NotFoundException e){
-                    e.printStackTrace();
-                } catch (IllegalAccessException e){
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
     }
 }
