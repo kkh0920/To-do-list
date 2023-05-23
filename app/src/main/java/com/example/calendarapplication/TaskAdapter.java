@@ -41,8 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         int deadline = Integer.parseInt(item.getDeadline());
         int estimatedDay = Integer.parseInt(item.getEstimatedDay());
 
-        // 예상 수행 일자, 마감일 색상 변환
-        changeDayColor(holder, deadline, estimatedDay);
+        changeRedDeadlineAndEstimatedDay(holder, deadline, estimatedDay);
 
         // 체크 박스 상태 변화
         holder.setItem(item);
@@ -81,6 +80,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 deletedTask.taskDao().delete(items.get(pos));
 
                 removeItem(pos);
+
                 notifyDataSetChanged();
             }
         });
@@ -91,31 +91,35 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         return items.size();
     }
 
+
     public void addItem(Task item){
         items.add(item);
     }
-
     public void removeItem(int position){
         items.remove(position);
     }
+
 
     public void setItems(ArrayList<Task> items) {
         this.items = items;
     }
 
-    public Task getItems(int position) {
-        return items.get(position);
-    }
+
 
     public void setItem(int position, Task item){
         items.set(position, item);
     }
+    public Task getItem(int position) {
+        return items.get(position);
+    }
+
 
     public void Sorting(){
         items.sort(Task::compareTo);
     }
 
-    public void changeDayColor(ViewHolder holder, int deadline, int estimatedDay){
+
+    public void changeRedDeadlineAndEstimatedDay(ViewHolder holder, int deadline, int estimatedDay){
         if(deadline - estimatedDay <= 0){
             holder.tv_estimatedDay.setTextColor(Color.parseColor("#ff0000"));
             holder.tv_estimated_day_format.setTextColor(Color.parseColor("#ff0000"));
@@ -133,11 +137,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView tv_task_name;
-        private TextView tv_deadline, tv_deadline_format;
-        private TextView tv_estimatedDay, tv_estimated_day_format;
-        private CheckBox checkBox;
-        private Button btn_delete;
+        final private TextView tv_task_name;
+        final private TextView tv_deadline, tv_deadline_format;
+        final private TextView tv_estimatedDay, tv_estimated_day_format;
+        final private CheckBox checkBox;
+        final private Button btn_delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

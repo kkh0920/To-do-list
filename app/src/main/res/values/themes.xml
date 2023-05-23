@@ -16,6 +16,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="MyPopupMenu" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_round</item>
+    </style>
+
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
         <!-- 상단 색 변경 -->
         <item name="colorAccent">#A9D7EC</item>

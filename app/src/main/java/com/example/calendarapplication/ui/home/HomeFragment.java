@@ -48,8 +48,8 @@ public class HomeFragment extends Fragment {
     private TaskDB taskDB = null;
 
     @SuppressLint("MissingInflatedId")
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -59,13 +59,15 @@ public class HomeFragment extends Fragment {
         // 데이터 로딩
         loadDataAll();
 
-        // 기본 텍스트 유무
+
+        // "일정을 추가해 보세요!" 텍스트 표시 유무
         if(adapter.getItemCount() > 0)
             tv_temp_text.setVisibility(View.INVISIBLE);
         else
             tv_temp_text.setVisibility(View.VISIBLE);
 
-        // 일정 추가 버튼 클릭 이벤트
+
+        // + 버튼 클릭 이벤트
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +89,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
     }
 
+    // 홈 화면에 사용자가 입력한 모든 일정을 시각화
     public void loadDataAll(){
         /* 원래 데이터베이스는 메인 스레드에서 접근하면 안되지만, 간단한 구현을 위해
            allowMainThreadQueries() 구문을 사용*/
@@ -94,7 +97,7 @@ public class HomeFragment extends Fragment {
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
 
-        updateDday();
+        updateDeadline();
 
         adapter = new TaskAdapter(taskArrayList);
 
@@ -105,39 +108,17 @@ public class HomeFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    // 팝업(액티비티) 화면을 호출
+
+    // 팝업 화면 호출
     public void mOnPopupClick() {
         Intent intent = new Intent(getContext(), PopupActivity.class);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         launcher.launch(intent);
     }
 
-    // D-Day 갱신
-    public void updateDday(){
-        int i = 0;
-        while(i < taskArrayList.size()){
-            Task task = taskArrayList.get(i);
-
-            int year = Integer.parseInt(task.getYear());
-            int month = Integer.parseInt(task.getMonth());
-            int day = Integer.parseInt(task.getDay());
-
-            int updatedDeadline = getCalculatedDeadline(year, month, day);
-
-            if(updatedDeadline < 0) {
-                taskArrayList.remove(task);
-                taskDB.taskDao().delete(task);
-                continue;
-            }
-
-            task.setDeadline(Integer.toString(updatedDeadline));
-            taskDB.taskDao().update(task);
-            i++;
-        }
-    }
 
     // 마감일 까지 남은 날짜 계산
-    public int getCalculatedDeadline(int year, int month, int day){
+    public int calculateDeadline(int year, int month, int day){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar todayCalendar = Calendar.getInstance();
         Calendar estimateCalendar = Calendar.getInstance();
@@ -149,6 +130,31 @@ public class HomeFragment extends Fragment {
         long diff = estimateCalendar.getTimeInMillis() - todayCalendar.getTimeInMillis();
 
         return (int) (diff / (24 * 60 * 60 * 1000));
+    }
+
+
+    // 데드라인 갱신
+    public void updateDeadline(){
+        int i = 0;
+        while(i < taskArrayList.size()){
+            Task task = taskArrayList.get(i);
+
+            int year = Integer.parseInt(task.getYear());
+            int month = Integer.parseInt(task.getMonth());
+            int day = Integer.parseInt(task.getDay());
+
+            int updatedDeadline = calculateDeadline(year, month, day);
+
+            if(updatedDeadline < 0) {
+                taskArrayList.remove(task);
+                taskDB.taskDao().delete(task);
+                continue;
+            }
+
+            task.setDeadline(Integer.toString(updatedDeadline));
+            taskDB.taskDao().update(task);
+            i++;
+        }
     }
 
     // 팝업창에 입력된 내용, 마감일을 받아오기 위해,
@@ -174,7 +180,7 @@ public class HomeFragment extends Fragment {
                         String estimatedDay = intent.getStringExtra("estimatedDay");
 
                         // D-Day 계산
-                        int deadline = getCalculatedDeadline(year, month, day);
+                        int deadline = calculateDeadline(year, month, day);
 
                         // 데이터 추가
                         Task task = new Task(name,

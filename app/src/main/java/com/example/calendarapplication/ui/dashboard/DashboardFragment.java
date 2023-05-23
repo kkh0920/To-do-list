@@ -24,10 +24,12 @@ import java.util.Locale;
 
 public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
-    private CalendarView calendarView;
+
     public TextView tv_calendar_title;
+    private CalendarView calendarView;
 
     public RecyclerView rv_cal_task_list;
+
     private ArrayList<Task> taskArrayList;
     private TaskAdapter adapter;
     private TaskDB taskDB = null;
@@ -45,7 +47,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 // 달력에서 날짜 클릭 시 수행되는 부분
-                loadData(year, month, dayOfMonth);
+                loadDataUnderCalendar(year, month, dayOfMonth);
             }
         });
 
@@ -63,7 +65,7 @@ public class DashboardFragment extends Fragment {
         rv_cal_task_list.setLayoutManager(layoutManager);
     }
 
-    public int getCalculatedDeadline(int year, int month, int day){
+    public int calculateDeadline(int year, int month, int day){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar todayCalendar = Calendar.getInstance();
         Calendar estimateCalendar = Calendar.getInstance();
@@ -77,20 +79,21 @@ public class DashboardFragment extends Fragment {
         return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
-    public void loadData(int y, int m, int d){
+
+    public void loadDataUnderCalendar(int y, int m, int d){
         /* 원래 데이터베이스는 메인 스레드에서 접근하면 안되지만, 간단한 구현을 위해
            allowMainThreadQueries() 구문을 사용*/
-        int diff = getCalculatedDeadline(y, m, d);
+        int diff = calculateDeadline(y, m, d);
 
         taskDB = TaskDB.getInstance(getContext());
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
 
-        // 모든 일정을 탐색, 현재 선택된 날짜가 각각의 일정 마감일 안에 속하면 달력 하단에 표시
         if(diff < 0){
             taskArrayList.clear();
         }
 
+        // 모든 일정을 탐색, 현재 선택된 날짜가 각 일정의 데드라인 안에 속하면 달력 하단에 표시
         int i = 0;
         while(i < taskArrayList.size()){
             Task task = taskArrayList.get(i);
