@@ -27,5 +27,10 @@
         <!-- 취소/확인버튼 색상 -->
         <item name="android:textColor">#65D1ED</item>
     </style>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.CalendarApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
 
 </resources>

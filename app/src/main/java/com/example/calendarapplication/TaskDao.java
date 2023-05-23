@@ -18,10 +18,17 @@ public interface TaskDao {
 
     @Insert // 삽입
     void insertAll(Task... tasks);
+    @Insert
+    void insert(Task task); // 단일 객체 삽입
 
     @Update
     public void update(Task task);
 
     @Delete // 삭제
     void delete(Task task);
+    
+    //@Query("SELECT * FROM task")
+    //Task getTaskById(int taskId);
+
+
 }
