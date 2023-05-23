@@ -33,12 +33,10 @@ import java.util.Locale;
 
 // 팝업창 기능 구현
 public class PopupActivity extends Activity {
-
     private Button bt_deadline, bt_estimated_day;
     private EditText et_task_name;
     private int year = 0, month = 0, day = 0;
     private String estimatedDay = "0";
-
     private DatePickerDialog.OnDateSetListener callbackMethod;
 
     @SuppressLint("MissingInflatedId")
@@ -143,6 +141,7 @@ public class PopupActivity extends Activity {
         // 액티비티(팝업) 닫기
         finish();
     }
+
     public void onClickCancelButton(View v) {
         setResult(RESULT_CANCELED);
         // 액티비티(팝업) 닫기
@@ -185,12 +184,6 @@ public class PopupActivity extends Activity {
 
         np.setValue(1);
 
-        np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-
-            }
-        });
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -159,7 +159,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         }
         public void setItem(final Task item){
             tv_task_name.setText(item.getTaskName());
-            tv_deadline.setText(item.getDeadline());
+
+            if(item.getDeadline().equals("0"))
+                tv_deadline.setText("Day");
+            else
+                tv_deadline.setText(item.getDeadline());
+
             tv_estimatedDay.setText(item.getEstimatedDay());
         }
     }

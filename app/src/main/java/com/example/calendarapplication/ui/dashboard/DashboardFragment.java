@@ -94,14 +94,16 @@ public class DashboardFragment extends Fragment {
         }
 
         // 모든 일정을 탐색, 현재 선택된 날짜가 각 일정의 데드라인 안에 속하면 달력 하단에 표시
-        int i = 0;
-        while(i < taskArrayList.size()){
-            Task task = taskArrayList.get(i);
+        int index = 0;
+        while(index < taskArrayList.size()){
+            Task task = taskArrayList.get(index);
             int deadline = Integer.parseInt(task.getDeadline());
             if(diff > deadline)
                 taskArrayList.remove(task);
-            else
-                i++;
+            else {
+                task.setDeadline(Integer.toString(deadline - diff));
+                index++;
+            }
         }
 
         adapter = new TaskAdapter(taskArrayList);
