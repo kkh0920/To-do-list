@@ -14,13 +14,17 @@ public class Task implements Comparable<Task> {
     @ColumnInfo(name="task_name")
     private String taskName;
 
-    // 마감일 날짜
+    // 마감일
     @ColumnInfo(name="year")
     private String year;
     @ColumnInfo(name="month")
     private String month;
     @ColumnInfo(name="day")
     private String day;
+
+    // 시간
+    private String hour;
+    private String minute;
 
     // D-day 일 수(HomeFragment 의 updateDeadline 함수를 통해 매번 갱신)
     @ColumnInfo(name="deadline")
@@ -36,11 +40,15 @@ public class Task implements Comparable<Task> {
 
 
     // 생성자
-    public Task(String taskName, String year, String month, String day, String deadline, String estimatedDay, Boolean isChecked) {
+    public Task(String taskName, String year, String month, String day,
+                String hour, String minute,
+                String deadline, String estimatedDay, Boolean isChecked) {
         this.taskName = taskName;
         this.year = year;
         this.month = month;
         this.day = day;
+        this.hour = hour;
+        this.minute = minute;
         this.deadline = deadline;
         this.estimatedDay = estimatedDay;
         this.isChecked = isChecked;
@@ -64,7 +72,7 @@ public class Task implements Comparable<Task> {
     }
 
 
-    // 마감일(년, 월, 일)
+    // 마감일(연도, 월, 일)
     public String getYear() {
         return year;
     }
@@ -84,6 +92,20 @@ public class Task implements Comparable<Task> {
         this.day = day;
     }
 
+    // 시간(시, 분)
+    public String getHour() {
+        return hour;
+    }
+    public void setHour(String hour) {
+        this.hour = hour;
+    }
+    public String getMinute() {
+        return minute;
+    }
+    public void setMinute(String minute) {
+        this.minute = minute;
+    }
+
 
     // D-day (n일, n >= 0, 정수)
     public String getDeadline() {
@@ -94,7 +116,7 @@ public class Task implements Comparable<Task> {
     }
 
 
-    // 예상 수행 시간 (n일, n >= 0, 정수)
+    // 예상 수행 시간 (n일, n >= 1, 자연수)
     public void setEstimatedDay(String estimatedDay) {
         this.estimatedDay = estimatedDay;
     }
@@ -111,18 +133,35 @@ public class Task implements Comparable<Task> {
         return isChecked;
     }
 
-    // 우선순위 정
+    // 우선순위 정렬
     @Override
     public int compareTo(Task task) {
-        int dl1 = Integer.parseInt(getDeadline());
-        int dl2 = Integer.parseInt(task.getDeadline());
+        int deadline1 = Integer.parseInt(getDeadline());
+        int deadline2 = Integer.parseInt(task.getDeadline());
 
-        int ed1 = Integer.parseInt(getEstimatedDay());
-        int ed2 = Integer.parseInt(task.getEstimatedDay());
+        int estimatedDay1 = Integer.parseInt(getEstimatedDay());
+        int estimatedDay2 = Integer.parseInt(task.getEstimatedDay());
 
-        if((dl1 - ed1) == (dl2 - ed2)){
-            return dl1 - dl2;
+        int time1 = (Integer.parseInt(getHour()) * 100) + Integer.parseInt(getMinute());
+        int time2 = (Integer.parseInt(task.getHour()) * 100) + Integer.parseInt(task.getMinute());
+
+        if(estimatedDay1 != 0 && estimatedDay2 != 0) {
+            if ((deadline1 - estimatedDay1) == (deadline2 - estimatedDay2)) {
+                if (deadline1 == deadline2) {
+                    return time1 - time2; // 3. 시간 비교
+                }
+                return deadline1 - deadline2; // 2. 데드라인 비교
+            }
+            return (deadline1 - estimatedDay1) - (deadline2 - estimatedDay2); // 1. 데드라인과 예상수행기간 비교
         }
-        return (dl1 - ed1) - (dl2 - ed2);
+
+        if(estimatedDay1 == 0 && estimatedDay2 == 0){
+            if (deadline1 == deadline2) {
+                return time1 - time2;
+            }
+            return deadline1 - deadline2;
+        }
+
+        return estimatedDay2 - estimatedDay1;
     }
 }

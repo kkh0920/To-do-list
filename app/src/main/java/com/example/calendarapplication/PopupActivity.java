@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -22,10 +23,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.calendarapplication.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,10 +36,11 @@ import java.util.Locale;
 
 // 팝업창 기능 구현
 public class PopupActivity extends Activity {
-    private Button bt_deadline, bt_estimated_day;
+    private Button bt_deadline, bt_estimated_day, bt_time;
     private EditText et_task_name;
     private int year = 0, month = 0, day = 0;
-    private String estimatedDay = "0";
+    private String hour = "00", minute = "00";
+    private String estimatedDay = "-1";
     private DatePickerDialog.OnDateSetListener callbackMethod;
 
     @SuppressLint("MissingInflatedId")
@@ -51,7 +55,9 @@ public class PopupActivity extends Activity {
         // 변수 초기화
         initialized();
 
-        // 달력에서 확인 버튼 클릭 시, 이벤트
+        bt_time.setVisibility(View.GONE);
+
+        // 달력에서 확인 버튼 클릭
         callbackMethod = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -67,6 +73,7 @@ public class PopupActivity extends Activity {
         et_task_name = (EditText) findViewById(R.id.et_task_name);
         bt_deadline = (Button) findViewById(R.id.bt_deadline);
         bt_estimated_day = (Button) findViewById(R.id.bt_estimated_day);
+        bt_time = (Button) findViewById(R.id.bt_time);
     }
 
     public String dateFormat(String pattern) {
@@ -90,35 +97,16 @@ public class PopupActivity extends Activity {
         return (int) (diff / (24 * 60 * 60 * 1000));
     }
 
-
-    // "마감일" 버튼 클릭 시 달력 표시
-    public void onClickDeadlineButton(View v){
-        int year = Integer.parseInt(dateFormat("yyyy"));
-        int month = Integer.parseInt(dateFormat("MM"));
-        int day = Integer.parseInt(dateFormat("dd"));
-
-        DatePickerDialog dialog = new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
-
-        // 오늘 이전 날짜는 선택 불가
-        Calendar minDate = Calendar.getInstance();
-        minDate.set(year, month - 1, day);
-        dialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
-
-        dialog.show();
-    }
-
-
     public void onClickOKButton(View v) {
         String name = et_task_name.getText().toString();
 
         // 데이터 입력 여부 체크
-        if(estimatedDay.equals("0") || year == 0 || month  == 0 || day == 0){
+        if(estimatedDay.equals("-1") || year == 0 || month  == 0 || day == 0){
             Snackbar.make(v.getRootView(), "값을 입력하지 않으셨나요?", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
         int e = Integer.parseInt(estimatedDay);
-
         int deadline = calculateDeadline();
 
         // 예상 수행 기간이 마감일 보다 큰 경우 인지 체크
@@ -134,6 +122,8 @@ public class PopupActivity extends Activity {
         intent.putExtra("year", year);
         intent.putExtra("month", month);
         intent.putExtra("day", day);
+        intent.putExtra("hour", hour);
+        intent.putExtra("minute", minute);
         intent.putExtra("estimatedDay", estimatedDay);
 
         setResult(RESULT_OK, intent);
@@ -141,13 +131,10 @@ public class PopupActivity extends Activity {
         // 액티비티(팝업) 닫기
         finish();
     }
-
     public void onClickCancelButton(View v) {
         setResult(RESULT_CANCELED);
-        // 액티비티(팝업) 닫기
         finish();
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -158,7 +145,24 @@ public class PopupActivity extends Activity {
         return true;
     }
 
+    // 달력 팝업창
+    public void onClickDeadlineButton(View v){
+        int year = Integer.parseInt(dateFormat("yyyy"));
+        int month = Integer.parseInt(dateFormat("MM"));
+        int day = Integer.parseInt(dateFormat("dd"));
 
+        DatePickerDialog dialog =
+                new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
+
+        // 오늘 이전 날짜는 선택 불가
+        Calendar minDate = Calendar.getInstance();
+        minDate.set(year, month - 1, day);
+        dialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
+
+        dialog.show();
+    }
+
+    // 예상수행기간 선택 팝업창
     public void showEstimatedDayPicker(View v){
         final Dialog numberPickerDialog = new Dialog(this);
         numberPickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -171,7 +175,7 @@ public class PopupActivity extends Activity {
 
         final NumberPicker np = (NumberPicker) numberPickerDialog.findViewById(R.id.estimated_day_picker);
 
-        np.setMinValue(1);
+        np.setMinValue(0);
         np.setMaxValue(999);
 
         np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
@@ -182,13 +186,26 @@ public class PopupActivity extends Activity {
 
         np.setWrapSelectorWheel(false);
 
-        np.setValue(1);
+        np.setValue(0);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 estimatedDay = Integer.toString(np.getValue());
-                bt_estimated_day.setText(estimatedDay + "일 간 수행");
+
+                if(estimatedDay.equals("0")) {
+                    bt_estimated_day.setText("약속");
+                    bt_time.setVisibility(View.VISIBLE);
+                    hour = "12";
+                    minute = "00";
+                }
+                else {
+                    bt_estimated_day.setText(estimatedDay + "일 간 수행");
+                    bt_time.setVisibility(View.GONE);
+                    hour = "00";
+                    minute = "00";
+                }
+
                 numberPickerDialog.dismiss();
             }
         });
@@ -201,5 +218,59 @@ public class PopupActivity extends Activity {
         });
 
         numberPickerDialog.show();
+    }
+
+    public void showTimePicker(View v){
+        final Dialog timePickerDialog = new Dialog(this);
+        timePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        timePickerDialog.setContentView(R.layout.time_picker);
+
+        timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        Button okBtn = (Button) timePickerDialog.findViewById(R.id.btn_ok_timepicker);
+        Button cancelBtn = (Button) timePickerDialog.findViewById(R.id.btn_cancel_timepicker);
+
+        final TimePicker tp = (TimePicker) timePickerDialog.findViewById(R.id.timepicker);
+
+        tp.setIs24HourView(true);
+
+        tp.setHour(12);
+        tp.setMinute(0);
+
+        tp.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(tp.getHour() < 10) {
+                    hour = "0";
+                    hour += Integer.toString(tp.getHour());
+                }
+                else{
+                    hour = Integer.toString(tp.getHour());
+                }
+
+                if(tp.getMinute() < 10){
+                    minute = "0";
+                    minute += Integer.toString(tp.getMinute());
+                }
+                else{
+                    minute = Integer.toString(tp.getMinute());
+                }
+
+                bt_time.setText(hour + " : " + minute);
+
+                timePickerDialog.dismiss();
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timePickerDialog.dismiss();
+            }
+        });
+
+        timePickerDialog.show();
     }
 }

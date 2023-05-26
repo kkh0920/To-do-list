@@ -13,15 +13,15 @@ import java.util.List;
 // Data Access Object(Dao) : 데이터를 처리할 행위를 모아 놓은것.
 @Dao
 public interface TaskDao {
-    @Query("SELECT * FROM task") // 불러오기
+    @Query("SELECT * FROM task")
     List<Task> getAll();
 
-    @Insert // 삽입
+    @Insert
     void insertAll(Task... tasks);
 
     @Update
-    public void update(Task task);
+    void update(Task task);
 
-    @Delete // 삭제
+    @Delete
     void delete(Task task);
 }

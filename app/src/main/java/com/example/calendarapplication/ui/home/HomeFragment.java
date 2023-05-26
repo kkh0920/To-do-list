@@ -40,12 +40,17 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
-    private RecyclerView recyclerView;
-    private FloatingActionButton fab;
-    private ArrayList<Task> taskArrayList;
-    private TaskAdapter adapter;
-    private TextView tv_temp_text;
+
     private TaskDB taskDB = null;
+
+    private ArrayList<Task> taskArrayList;
+
+    private RecyclerView recyclerView;
+    private TaskAdapter adapter;
+
+    private FloatingActionButton fab;
+    private TextView tv_temp_text;
+
 
     @SuppressLint("MissingInflatedId")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,15 +62,13 @@ public class HomeFragment extends Fragment {
         initialized();
 
         // 데이터 로딩
-        loadDataAll();
-
+        loadTaskAll();
 
         // "일정을 추가해 보세요!" 텍스트 표시 유무
         if(adapter.getItemCount() > 0)
             tv_temp_text.setVisibility(View.INVISIBLE);
         else
             tv_temp_text.setVisibility(View.VISIBLE);
-
 
         // + 버튼 클릭 이벤트
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +83,9 @@ public class HomeFragment extends Fragment {
 
     public void initialized(){
         tv_temp_text = binding.tvTempText;
-        recyclerView = binding.rvTaskList;
         fab = binding.fab;
+
+        recyclerView = binding.rvTaskList;
 
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -90,9 +94,10 @@ public class HomeFragment extends Fragment {
     }
 
     // 홈 화면에 사용자가 입력한 모든 일정을 시각화
-    public void loadDataAll(){
+    public void loadTaskAll(){
         /* 원래 데이터베이스는 메인 스레드에서 접근하면 안되지만, 간단한 구현을 위해
            allowMainThreadQueries() 구문을 사용*/
+
         taskDB = TaskDB.getInstance(getContext());
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
@@ -119,7 +124,6 @@ public class HomeFragment extends Fragment {
 
     // 마감일 까지 남은 날짜 계산
     public int calculateDeadline(int year, int month, int day){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Calendar todayCalendar = Calendar.getInstance();
         Calendar estimateCalendar = Calendar.getInstance();
 
@@ -133,7 +137,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    // 데드라인 갱신
+    // 매일 D-day 갱신
     public void updateDeadline(){
         int i = 0;
         while(i < taskArrayList.size()){
@@ -177,6 +181,21 @@ public class HomeFragment extends Fragment {
                         int day = intent.getIntExtra("day", 0);
                         month++;
 
+                        String m = "0";
+                        if(month < 10)
+                            m += Integer.toString(month);
+                        else
+                            m = Integer.toString(month);
+
+                        String d = "0";
+                        if(day < 10)
+                            d += Integer.toString(day);
+                        else
+                            d = Integer.toString(day);
+
+                        String hour = intent.getStringExtra("hour");
+                        String minute = intent.getStringExtra("minute");
+
                         String estimatedDay = intent.getStringExtra("estimatedDay");
 
                         // D-Day 계산
@@ -184,13 +203,13 @@ public class HomeFragment extends Fragment {
 
                         // 데이터 추가
                         Task task = new Task(name,
-                                Integer.toString(year), Integer.toString(month), Integer.toString(day),
-                                Integer.toString(deadline), estimatedDay, false);
+                                        Integer.toString(year), m, d, hour, minute,
+                                        Integer.toString(deadline), estimatedDay, false);
 
                         TaskDB.getInstance(getContext()).taskDao().insertAll(task);
 
                         // 데이터 로딩
-                        loadDataAll();
+                        loadTaskAll();
                     }
                 }
             });

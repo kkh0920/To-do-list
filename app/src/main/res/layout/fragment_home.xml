@@ -40,7 +40,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/baseline_add_24"
-        android:backgroundTint="#65D1ED"
+        android:backgroundTint="#9597FF"
         app:tint="@null"
         tools:ignore="SpeakableTextPresentCheck"/>
 
