@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.calendarapplication.R;
+import com.example.calendarapplication.ui.home.HomeFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.Time;
@@ -36,12 +37,15 @@ import java.util.Locale;
 
 // 팝업창 기능 구현
 public class PopupActivity extends Activity {
+    private TextView tv_popup_title;
     private Button bt_deadline, bt_estimated_day, bt_time;
     private EditText et_task_name;
     private int year = 0, month = 0, day = 0;
     private String hour = "00", minute = "00";
     private String estimatedDay = "-1";
     private DatePickerDialog.OnDateSetListener callbackMethod;
+
+    private boolean isEdit;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -57,6 +61,8 @@ public class PopupActivity extends Activity {
 
         bt_time.setVisibility(View.GONE);
 
+        checkEditOrAdd();
+
         // 달력에서 확인 버튼 클릭
         callbackMethod = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -64,16 +70,71 @@ public class PopupActivity extends Activity {
                 year = i;
                 month = i1;
                 day = i2;
-                bt_deadline.setText(i + " / " + (i1 + 1) + " / " + i2);
+
+                String m = "0";
+                if(month < 9)
+                    m += Integer.toString(month + 1);
+                else
+                    m = Integer.toString(month + 1);
+
+                String d = "0";
+                if(day < 10)
+                    d += Integer.toString(day);
+                else
+                    d = Integer.toString(day);
+
+                bt_deadline.setText(i + " / " + m + " / " + d);
             }
         };
     }
 
     public void initialized() {
+        tv_popup_title = (TextView) findViewById(R.id.tv_popup_title);
         et_task_name = (EditText) findViewById(R.id.et_task_name);
         bt_deadline = (Button) findViewById(R.id.bt_deadline);
         bt_estimated_day = (Button) findViewById(R.id.bt_estimated_day);
         bt_time = (Button) findViewById(R.id.bt_time);
+    }
+    public void checkEditOrAdd(){
+        Intent intent = getIntent();
+        isEdit = intent.getBooleanExtra("isEdit", false);
+        if(!isEdit)
+            return;
+
+        tv_popup_title.setText("수정");
+
+        et_task_name.setText(intent.getStringExtra("name"));
+
+        String syear = intent.getStringExtra("year");
+        String smonth = intent.getStringExtra("month");
+        String sday = intent.getStringExtra("day");
+        bt_deadline.setText(syear + " / " + smonth + " / " + sday);
+
+        year = Integer.parseInt(syear);
+        month = Integer.parseInt(smonth) - 1;
+        day = Integer.parseInt(sday);
+
+        String estimate = intent.getStringExtra("estimatedDay");
+        estimatedDay = estimate;
+
+        if(estimate.equals("0")){
+            bt_estimated_day.setText("약속");
+
+            bt_time.setVisibility(View.VISIBLE);
+
+            String h = intent.getStringExtra("hour");
+            String m = intent.getStringExtra("minute");
+
+            hour = h;
+            minute = m;
+
+            bt_time.setText(hour + " : " + minute);
+        }
+        else{
+            bt_estimated_day.setText(intent.getStringExtra("estimatedDay") + "일 간 수행");
+            hour = "00";
+            minute = "00";
+        }
     }
 
     public String dateFormat(String pattern) {
@@ -125,6 +186,11 @@ public class PopupActivity extends Activity {
         intent.putExtra("hour", hour);
         intent.putExtra("minute", minute);
         intent.putExtra("estimatedDay", estimatedDay);
+
+        if(isEdit)
+            intent.putExtra("isEdit", true);
+        else
+            intent.putExtra("isEdit", false);
 
         setResult(RESULT_OK, intent);
 

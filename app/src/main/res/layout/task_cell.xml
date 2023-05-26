@@ -167,10 +167,19 @@
                 android:layout_weight="1"/>
 
             <android.widget.Button
+                android:id="@+id/btn_edit"
+                android:background="@drawable/baseline_edit_24"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="#B9C2FF" />
+
+            <android.widget.Button
                 android:id="@+id/btn_delete"
                 android:background="@drawable/baseline_backspace_24"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="#B9C2FF" />

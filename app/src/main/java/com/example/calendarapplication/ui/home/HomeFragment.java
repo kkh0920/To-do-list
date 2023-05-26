@@ -1,16 +1,14 @@
 package com.example.calendarapplication.ui.home;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_NO_LOCALIZED_COLLATORS;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -23,20 +21,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendarapplication.PopupActivity;
+import com.example.calendarapplication.PopupDelete;
 import com.example.calendarapplication.Task;
 import com.example.calendarapplication.TaskAdapter;
 import com.example.calendarapplication.TaskDB;
 import com.example.calendarapplication.databinding.FragmentHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import org.w3c.dom.Text;
-
-import java.io.Console;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
@@ -51,7 +44,7 @@ public class HomeFragment extends Fragment {
     private FloatingActionButton fab;
     private TextView tv_temp_text;
 
-
+    private int pos;
     @SuppressLint("MissingInflatedId")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -70,7 +63,6 @@ public class HomeFragment extends Fragment {
         else
             tv_temp_text.setVisibility(View.VISIBLE);
 
-        // + 버튼 클릭 이벤트
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,11 +85,57 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
     }
 
+    public void initializer(){
+        adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
+            @Override
+            public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
+                Task task = taskArrayList.get(position);
+                task.setIsChecked(isChecked);
+
+                TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
+                updatedTask.taskDao().update(task);
+            }
+
+            @Override
+            public void onEditClick(View v, int position) {
+                Task task = taskArrayList.get(position);
+
+                Intent intent = new Intent(getContext(), PopupActivity.class);
+
+                intent.putExtra("isEdit", true);
+
+                intent.putExtra("name", task.getTaskName());
+
+                intent.putExtra("year", task.getYear());
+                intent.putExtra("month", task.getMonth());
+                intent.putExtra("day", task.getDay());
+
+                intent.putExtra("estimatedDay", task.getEstimatedDay());
+
+                intent.putExtra("hour", task.getHour());
+                intent.putExtra("minute", task.getMinute());
+
+                pos = position;
+
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                launcher.launch(intent);
+            }
+
+            @Override
+            public void onDeleteClick(View v, int position) {
+                pos = position;
+
+                Intent intent = new Intent(getContext(), PopupDelete.class);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                launcherDel.launch(intent);
+            }
+        });
+    }
+
     // 홈 화면에 사용자가 입력한 모든 일정을 시각화
     public void loadTaskAll(){
         /* 원래 데이터베이스는 메인 스레드에서 접근하면 안되지만, 간단한 구현을 위해
            allowMainThreadQueries() 구문을 사용*/
-
         taskDB = TaskDB.getInstance(getContext());
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
@@ -105,6 +143,7 @@ public class HomeFragment extends Fragment {
         updateDeadline();
 
         adapter = new TaskAdapter(taskArrayList);
+        initializer();
 
         recyclerView.setAdapter(adapter);
 
@@ -117,6 +156,7 @@ public class HomeFragment extends Fragment {
     // 팝업 화면 호출
     public void mOnPopupClick() {
         Intent intent = new Intent(getContext(), PopupActivity.class);
+        intent.putExtra("isEdit", false);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         launcher.launch(intent);
     }
@@ -201,18 +241,45 @@ public class HomeFragment extends Fragment {
                         // D-Day 계산
                         int deadline = calculateDeadline(year, month, day);
 
+                        // 수정
+                        boolean isEdit = intent.getBooleanExtra("isEdit", false);
+                        if(isEdit){
+                            Task task = adapter.getItem(pos);
+                            TaskDB.getInstance(getContext()).taskDao().delete(task);
+                        }
+
                         // 데이터 추가
                         Task task = new Task(name,
-                                        Integer.toString(year), m, d, hour, minute,
-                                        Integer.toString(deadline), estimatedDay, false);
+                                Integer.toString(year), m, d, hour, minute,
+                                Integer.toString(deadline), estimatedDay, false);
 
                         TaskDB.getInstance(getContext()).taskDao().insertAll(task);
-
-                        // 데이터 로딩
                         loadTaskAll();
+
                     }
                 }
             });
+
+    ActivityResultLauncher<Intent> launcherDel = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK){
+                        TaskDB deleteTask = TaskDB.getInstance(getContext());
+
+                        deleteTask.taskDao().delete(taskArrayList.get(pos));
+
+                        taskArrayList.remove(pos);
+
+                        adapter.notifyItemRemoved(pos);
+
+                        if(adapter.getItemCount() == 0) {
+                            tv_temp_text.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+
 
     @Override
     public void onDestroyView() {
