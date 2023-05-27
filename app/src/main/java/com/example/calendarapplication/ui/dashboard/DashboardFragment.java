@@ -3,6 +3,7 @@ package com.example.calendarapplication.ui.dashboard;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.CalendarView;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -89,7 +91,7 @@ public class DashboardFragment extends Fragment {
 
         rv_cal_task_list.setLayoutManager(layoutManager);
     }
-    public void initializer(){
+    public void adapterInitializer(){
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
@@ -190,7 +192,7 @@ public class DashboardFragment extends Fragment {
         }
 
         adapter = new TaskAdapter(taskArrayList);
-        initializer();
+        adapterInitializer();
 
         adapter.Sorting();
 
@@ -263,6 +265,19 @@ public class DashboardFragment extends Fragment {
                     }
                 }
             });
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+    }
+
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            return;
+        }
+    };
 
     @Override
     public void onDestroyView() {

@@ -4,6 +4,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Task 클래스
 @Entity
 public class Task implements Comparable<Task> {
@@ -51,7 +54,7 @@ public class Task implements Comparable<Task> {
         this.minute = minute;
         this.deadline = deadline;
         this.estimatedDay = estimatedDay;
-        this.isChecked = isChecked;
+        this.isChecked = false;
     }
 
     // ID
@@ -132,6 +135,7 @@ public class Task implements Comparable<Task> {
     public Boolean isChecked(){
         return isChecked;
     }
+
 
     // 우선순위 정렬
     @Override

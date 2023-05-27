@@ -3,6 +3,8 @@ package com.example.calendarapplication.ui.home;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,18 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendarapplication.PopupActivity;
 import com.example.calendarapplication.PopupDelete;
+import com.example.calendarapplication.R;
 import com.example.calendarapplication.Task;
 import com.example.calendarapplication.TaskAdapter;
 import com.example.calendarapplication.TaskDB;
@@ -30,6 +36,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
@@ -43,6 +52,8 @@ public class HomeFragment extends Fragment {
 
     private FloatingActionButton fab;
     private TextView tv_temp_text;
+
+
 
     private int pos;
     @SuppressLint("MissingInflatedId")
@@ -85,15 +96,39 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void initializer(){
+
+    public void adapterInitializer(){
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
-                Task task = taskArrayList.get(position);
-                task.setIsChecked(isChecked);
+                Task task = taskArrayList.get(position); //CheckboxClick이벤트가 발생한 아이템의 position을 읽어 task 가져옴
+                task.setIsChecked(!task.isChecked()); //task의 isChecked true/false 전환
 
                 TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
                 updatedTask.taskDao().update(task);
+
+                if(task.isChecked() == true){ //task의 isChecked가 true일 때
+                    Toast.makeText(compoundButton.getContext(),String.valueOf(task.isChecked()), Toast.LENGTH_LONG).show(); //토스트로 isChecked 값 true 확인
+                    taskArrayList.remove(position); //해당 아이템 리스트 삭제후  최하단으로 재생성
+                    taskArrayList.add(taskArrayList.size(), task);
+                }else{
+                    Toast.makeText(compoundButton.getContext(),String.valueOf(task.isChecked()), Toast.LENGTH_LONG).show(); //토스트로 isChecked 값 false 확인
+                    // 체크 해제 시 원래 위치로 이동
+                    taskArrayList.remove(position);
+                    taskArrayList.add(position, task);
+                }
+                // 변경된 데이터베이스 가져오기
+                TaskDB updatedTaskDB = TaskDB.getInstance(compoundButton.getContext());
+
+                // 데이터베이스로부터 목록 다시 로드
+                List<Task> updatedTaskList = updatedTaskDB.taskDao().getAll();
+
+                // 목록 정렬
+                Collections.sort(updatedTaskList);
+
+                // 어댑터에 변경된 목록 설정
+                taskArrayList = new ArrayList<>(updatedTaskList);
+                adapter.notifyDataSetChanged(); // 화면 갱신
             }
 
             @Override
@@ -146,7 +181,7 @@ public class HomeFragment extends Fragment {
         updateDeadline();
 
         adapter = new TaskAdapter(taskArrayList);
-        initializer();
+        adapterInitializer();
 
         recyclerView.setAdapter(adapter);
 
@@ -283,6 +318,18 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+    }
+
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            return;
+        }
+    };
 
     @Override
     public void onDestroyView() {
