@@ -3,6 +3,8 @@ package com.example.calendarapplication.ui.home;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,18 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendarapplication.PopupActivity;
 import com.example.calendarapplication.PopupDelete;
+import com.example.calendarapplication.R;
 import com.example.calendarapplication.Task;
 import com.example.calendarapplication.TaskAdapter;
 import com.example.calendarapplication.TaskDB;
@@ -30,6 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
@@ -85,7 +92,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void initializer(){
+    public void adapterInitializer(){
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
@@ -146,7 +153,7 @@ public class HomeFragment extends Fragment {
         updateDeadline();
 
         adapter = new TaskAdapter(taskArrayList);
-        initializer();
+        adapterInitializer();
 
         recyclerView.setAdapter(adapter);
 
@@ -283,6 +290,18 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+    }
+
+    private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            return;
+        }
+    };
 
     @Override
     public void onDestroyView() {
