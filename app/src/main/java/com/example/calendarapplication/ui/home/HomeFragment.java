@@ -98,6 +98,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onEditClick(View v, int position) {
+                pos = position;
+
                 Task task = taskArrayList.get(position);
 
                 Intent intent = new Intent(getContext(), PopupActivity.class);
@@ -115,8 +117,6 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("hour", task.getHour());
                 intent.putExtra("minute", task.getMinute());
 
-                pos = position;
-
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 launcher.launch(intent);
             }
@@ -126,6 +126,9 @@ public class HomeFragment extends Fragment {
                 pos = position;
 
                 Intent intent = new Intent(getContext(), PopupDelete.class);
+
+                intent.putExtra("name", taskArrayList.get(position).getTaskName());
+
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 launcherDel.launch(intent);
             }

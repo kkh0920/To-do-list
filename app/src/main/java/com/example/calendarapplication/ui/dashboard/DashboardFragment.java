@@ -130,6 +130,9 @@ public class DashboardFragment extends Fragment {
                 pos = position;
 
                 Intent intent = new Intent(getContext(), PopupDelete.class);
+
+                intent.putExtra("name", taskArrayList.get(position).getTaskName());
+
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 launcherDel.launch(intent);
             }
