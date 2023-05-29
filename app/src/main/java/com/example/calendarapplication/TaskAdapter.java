@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -142,6 +143,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         final private TextView tv_estimatedDay, tv_estimated_day_format;
         final private CheckBox checkBox;
         final private Button btn_delete;
+        final private LinearLayout ll_taskcell;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -156,6 +158,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             checkBox = itemView.findViewById(R.id.checkBox);
 
             btn_delete = itemView.findViewById(R.id.btn_delete);
+
+            ll_taskcell = itemView.findViewById(R.id.task_cell_layout);
         }
         public void setItem(final Task item){
             tv_task_name.setText(item.getTaskName());
@@ -166,6 +170,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 tv_deadline.setText(item.getDeadline());
 
             tv_estimatedDay.setText(item.getEstimatedDay());
+
+            if(Integer.parseInt(item.getDeadline()) - Integer.parseInt(item.getEstimatedDay()) <= 0){
+                ll_taskcell.setBackgroundResource(R.drawable.task_cell_red_edge);
+            }else{
+                ll_taskcell.setBackground(null);
+            }
         }
     }
 }
