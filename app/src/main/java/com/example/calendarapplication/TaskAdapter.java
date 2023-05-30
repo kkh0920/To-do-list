@@ -1,27 +1,21 @@
 package com.example.calendarapplication;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
-import android.view.ContextMenu;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.calendarapplication.ui.home.HomeFragment;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 // 사용자에게 보여지는 RecyclerView 와 데이터를 담고있는 ArrayList 사이를 매개하는 TaskAdapter(일정 관리를 담당)
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -58,7 +52,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         int estimatedDay = Integer.parseInt(item.getEstimatedDay());
 
         taskViewSetting(holder, estimatedDay);
-        taskColorSetting(holder, deadline, estimatedDay);
+        textColorAndBoldSetting(holder, deadline, estimatedDay);
 
         holder.setItem(item);
     }
@@ -88,28 +82,64 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
 
-    public void taskColorSetting(ViewHolder holder, int deadline, int estimatedDay){
+    public void textColorAndBoldSetting(ViewHolder holder, int deadline, int estimatedDay){
         if(deadline - estimatedDay <= 0){
-            holder.tv_hour.setTextColor(Color.parseColor("#FF4E4E"));
-            holder.tv_time_format.setTextColor(Color.parseColor("#FF4E4E"));
-            holder.tv_minute.setTextColor(Color.parseColor("#FF4E4E"));
+            holder.tv_hour.setTextColor(Color.parseColor("#6579FF"));
+            holder.tv_time_format.setTextColor(Color.parseColor("#6579FF"));
+            holder.tv_minute.setTextColor(Color.parseColor("#6579FF"));
 
-            holder.tv_estimatedDay.setTextColor(Color.parseColor("#FF4E4E"));
-            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#FF4E4E"));
+            holder.tv_estimatedDay.setTextColor(Color.parseColor("#FF7965"));
+            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#FF7965"));
 
-            holder.tv_deadline.setTextColor(Color.parseColor("#FF4E4E"));
-            holder.tv_deadline_format.setTextColor(Color.parseColor("#FF4E4E"));
+            holder.tv_hour.setTextColor(Color.parseColor("#6579FF"));
+            holder.tv_time_format.setTextColor(Color.parseColor("#6579FF"));
+            holder.tv_minute.setTextColor(Color.parseColor("#6579FF"));
+
+            holder.tv_hour.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.tv_time_format.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.tv_minute.setTypeface(Typeface.DEFAULT_BOLD);
+
+            holder.tv_estimatedDay.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.tv_estimated_day_format.setTypeface(Typeface.DEFAULT_BOLD);
+
+            holder.tv_deadline.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.tv_deadline_format.setTypeface(Typeface.DEFAULT_BOLD);
+
+            if(estimatedDay != 0) {
+                holder.ll_taskcell.setBackgroundResource(R.drawable.task_cell_red_edge);
+
+                holder.tv_deadline.setTextColor(Color.parseColor("#FF7965"));
+                holder.tv_deadline_format.setTextColor(Color.parseColor("#FF7965"));
+            }
+            else {
+                holder.ll_taskcell.setBackgroundResource(R.drawable.task_cell_blue_edge);
+
+                holder.tv_deadline.setTextColor(Color.parseColor("#6579FF"));
+                holder.tv_deadline_format.setTextColor(Color.parseColor("#6579FF"));
+            }
         }
         else{
-            holder.tv_hour.setTextColor(Color.parseColor("#9397FB"));
-            holder.tv_time_format.setTextColor(Color.parseColor("#9397FB"));
-            holder.tv_minute.setTextColor(Color.parseColor("#9397FB"));
+            holder.tv_hour.setTypeface(Typeface.DEFAULT);
+            holder.tv_time_format.setTypeface(Typeface.DEFAULT);
+            holder.tv_minute.setTypeface(Typeface.DEFAULT);
 
-            holder.tv_estimatedDay.setTextColor(Color.parseColor("#9397FB"));
-            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#9397FB"));
+            holder.tv_estimatedDay.setTypeface(Typeface.DEFAULT);
+            holder.tv_estimated_day_format.setTypeface(Typeface.DEFAULT);
+
+            holder.tv_deadline.setTypeface(Typeface.DEFAULT);
+            holder.tv_deadline_format.setTypeface(Typeface.DEFAULT);
+
+            holder.tv_hour.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_time_format.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_minute.setTextColor(Color.parseColor("#7A7777"));
+
+            holder.tv_estimatedDay.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#7A7777"));
 
             holder.tv_deadline.setTextColor(Color.parseColor("#7A7777"));
             holder.tv_deadline_format.setTextColor(Color.parseColor("#7A7777"));
+
+            holder.ll_taskcell.setBackground(null);
         }
     }
 
@@ -128,6 +158,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.tv_estimated_day_format.setVisibility(View.GONE);
 
             holder.taskCardView.setCardBackgroundColor(Color.parseColor("#F7F7FF"));
+
+            holder.btn_edit.setBackgroundResource(R.drawable.baseline_edit_24);
+            holder.btn_delete.setBackgroundResource(R.drawable.baseline_backspace_24);
         }
         else {
             holder.tv_month.setVisibility(View.GONE);
@@ -143,6 +176,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.tv_estimated_day_format.setVisibility(View.VISIBLE);
 
             holder.taskCardView.setCardBackgroundColor(Color.parseColor("#FFF7F7"));
+
+            holder.btn_edit.setBackgroundResource(R.drawable.baseline_edit_red);
+            holder.btn_delete.setBackgroundResource(R.drawable.baseline_backspace_red);
         }
     }
 
@@ -156,6 +192,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         private TextView tv_estimated_day_name, tv_estimatedDay, tv_estimated_day_format;
         private CheckBox checkBox;
         private Button btn_delete, btn_edit;
+        private LinearLayout ll_taskcell;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -226,6 +263,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             btn_delete = itemView.findViewById(R.id.btn_delete);
 
             btn_edit = itemView.findViewById(R.id.btn_edit);
+
+            ll_taskcell = itemView.findViewById(R.id.task_cell_layout);
         }
 
         public void setItem(final Task item){

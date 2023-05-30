@@ -26,7 +26,7 @@
         android:layout_gravity="center"
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="15dp"
-        app:cardElevation="2dp"
+        app:cardElevation="1dp"
         app:cardUseCompatPadding="true">
 
         <CalendarView

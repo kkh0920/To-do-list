@@ -1,4 +1,4 @@
-package com.example.calendarapplication;
+package com.example.calendarapplication.ui.popup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,9 +10,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class PopupFinish extends AppCompatActivity {
-    Button okBtn, cancelBtn;
+import com.example.calendarapplication.R;
+import com.example.calendarapplication.ui.home.HomeFragment;
 
+public class PopupDelete extends AppCompatActivity {
+    Button okBtn, cancelBtn;
+    TextView tv_task_name_del;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,13 +23,15 @@ public class PopupFinish extends AppCompatActivity {
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setContentView(R.layout.activity_popup_finish);
+        setContentView(R.layout.activity_popup_delete);
 
-        okBtn = (Button) findViewById(R.id.btn_ok_finish);
-        cancelBtn = (Button) findViewById(R.id.btn_cancel_finish);
+        tv_task_name_del = (TextView) findViewById(R.id.tv_task_name_del);
+        okBtn = (Button) findViewById(R.id.btn_ok_del);
+        cancelBtn = (Button) findViewById(R.id.btn_cancel_del);
 
         Intent intent = getIntent();
 
+        tv_task_name_del.setText(intent.getStringExtra("name"));
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

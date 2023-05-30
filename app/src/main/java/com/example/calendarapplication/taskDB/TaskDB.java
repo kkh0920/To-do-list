@@ -1,10 +1,12 @@
-package com.example.calendarapplication;
+package com.example.calendarapplication.taskDB;
 
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
+import com.example.calendarapplication.Task;
 
 @Database(entities = {Task.class}, version = 1)
 public abstract class TaskDB extends RoomDatabase {

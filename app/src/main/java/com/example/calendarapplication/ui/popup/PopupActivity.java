@@ -1,4 +1,4 @@
-package com.example.calendarapplication;
+package com.example.calendarapplication.ui.popup;
 
 import androidx.appcompat.app.AppCompatActivity;
 

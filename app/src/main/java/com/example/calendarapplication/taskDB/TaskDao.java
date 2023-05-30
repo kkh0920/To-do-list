@@ -1,13 +1,13 @@
-package com.example.calendarapplication;
+package com.example.calendarapplication.taskDB;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.ArrayList;
+import com.example.calendarapplication.Task;
+
 import java.util.List;
 
 // Data Access Object(Dao) : 데이터를 처리할 행위를 모아 놓은것.

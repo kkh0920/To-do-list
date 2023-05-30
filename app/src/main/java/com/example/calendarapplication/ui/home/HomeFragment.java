@@ -3,7 +3,6 @@ package com.example.calendarapplication.ui.home;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
@@ -21,22 +19,19 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.calendarapplication.PopupActivity;
-import com.example.calendarapplication.PopupDelete;
-import com.example.calendarapplication.R;
+import com.example.calendarapplication.ui.popup.PopupActivity;
+import com.example.calendarapplication.ui.popup.PopupDelete;
 import com.example.calendarapplication.Task;
 import com.example.calendarapplication.TaskAdapter;
-import com.example.calendarapplication.TaskDB;
+import com.example.calendarapplication.taskDB.TaskDB;
 import com.example.calendarapplication.databinding.FragmentHomeBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;

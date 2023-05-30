@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -13,15 +14,15 @@
         android:theme="@style/Theme.CalendarApplication"
         tools:targetApi="31">
         <activity
-            android:name=".PopupFinish"
-            android:exported="false"
-            android:theme="@style/MyPopupMenu"/>
-        <activity
-            android:name=".PopupActivity"
+            android:name=".ui.popup.PopupFinish"
             android:exported="false"
             android:theme="@style/MyPopupMenu" />
         <activity
-            android:name=".PopupDelete"
+            android:name=".ui.popup.PopupActivity"
+            android:exported="false"
+            android:theme="@style/MyPopupMenu" />
+        <activity
+            android:name=".ui.popup.PopupDelete"
             android:exported="false"
             android:theme="@style/MyPopupMenu" />
         <activity

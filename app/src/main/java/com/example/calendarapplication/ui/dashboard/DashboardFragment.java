@@ -2,11 +2,9 @@ package com.example.calendarapplication.ui.dashboard;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,20 +22,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.calendarapplication.PopupActivity;
-import com.example.calendarapplication.PopupDelete;
-import com.example.calendarapplication.R;
+import com.example.calendarapplication.ui.popup.PopupActivity;
+import com.example.calendarapplication.ui.popup.PopupDelete;
 import com.example.calendarapplication.Task;
 import com.example.calendarapplication.TaskAdapter;
-import com.example.calendarapplication.TaskDB;
+import com.example.calendarapplication.taskDB.TaskDB;
 import com.example.calendarapplication.databinding.FragmentDashboardBinding;
-import com.example.calendarapplication.ui.home.HomeFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
