@@ -41,7 +41,7 @@ public class PopupActivity extends Activity {
     private Button bt_deadline, bt_estimated_day, bt_time;
     private EditText et_task_name;
     private int year = 0, month = 0, day = 0;
-    private String hour = "00", minute = "00";
+    private String hour = "-1", minute = "-1";
     private String estimatedDay = "-1";
     private DatePickerDialog.OnDateSetListener callbackMethod;
 
@@ -217,12 +217,18 @@ public class PopupActivity extends Activity {
         int month = Integer.parseInt(dateFormat("MM"));
         int day = Integer.parseInt(dateFormat("dd"));
 
-        DatePickerDialog dialog =
-                new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
+        DatePickerDialog dialog;
+
+        if(year == 0 || month == 0 || day == 0)
+            dialog = new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, year, month - 1, day);
+        else
+            dialog = new DatePickerDialog(this, R.style.DialogTheme, callbackMethod, this.year, this.month, this.day);
 
         // 오늘 이전 날짜는 선택 불가
         Calendar minDate = Calendar.getInstance();
+
         minDate.set(year, month - 1, day);
+
         dialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
 
         dialog.show();
@@ -252,7 +258,10 @@ public class PopupActivity extends Activity {
 
         np.setWrapSelectorWheel(false);
 
-        np.setValue(0);
+        if(estimatedDay.equals("-1"))
+            np.setValue(0);
+        else
+            np.setValue(Integer.parseInt(estimatedDay));
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,8 +309,14 @@ public class PopupActivity extends Activity {
 
         tp.setIs24HourView(true);
 
-        tp.setHour(12);
-        tp.setMinute(0);
+        if(hour.equals("-1") || minute.equals("-1")){
+            tp.setHour(12);
+            tp.setMinute(0);
+        }
+        else{
+            tp.setHour(Integer.parseInt(hour));
+            tp.setMinute(Integer.parseInt(minute));
+        }
 
         tp.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "245488230271",
+    "project_id": "calendarappnotification-f690b",
+    "storage_bucket": "calendarappnotification-f690b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245488230271:android:d5cf215bde2768f945844a",
+        "android_client_info": {
+          "package_name": "com.example.calendarapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm4j2sNNZhJqIGys6iQUVbu4td9PUw6VY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -61,6 +61,11 @@ public class DashboardFragment extends Fragment {
         curDay = day;
         loadTaskUnderCalendar(year, month - 1, day);
 
+        Calendar minDate = Calendar.getInstance();
+
+        minDate.set(curYear, curMonth, curDay);
+
+        calendarView.setMinDate(minDate.getTimeInMillis());
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
