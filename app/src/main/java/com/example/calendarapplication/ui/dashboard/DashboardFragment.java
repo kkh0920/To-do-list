@@ -174,8 +174,6 @@ public class DashboardFragment extends Fragment {
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
 
-        Log.e("test", taskArrayList.get(taskArrayList.size() - 1).getDeadline() + "");
-
         // 모든 일정을 탐색, 현재 선택된 날짜가 각 일정의 데드라인 안에 속하면 달력 하단에 표시
         int index = 0;
         while(index < taskArrayList.size()){

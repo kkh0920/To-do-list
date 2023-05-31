@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
     }
 
     private long time= 0;
