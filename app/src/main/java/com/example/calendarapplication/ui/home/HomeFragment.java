@@ -97,6 +97,8 @@ public class HomeFragment extends Fragment {
 
                 TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
                 updatedTask.taskDao().update(task);
+
+
             }
 
             @Override
@@ -186,7 +188,7 @@ public class HomeFragment extends Fragment {
     // 매일 D-day 갱신
     public void updateDeadline(){
         int i = 0;
-        while(i < taskArrayList.size()){
+        while(i < taskArrayList.size()) {
             Task task = taskArrayList.get(i);
 
             int year = Integer.parseInt(task.getYear());
@@ -195,14 +197,18 @@ public class HomeFragment extends Fragment {
 
             int updatedDeadline = calculateDeadline(year, month, day);
 
-            if(updatedDeadline < 0) {
+            if (updatedDeadline < 0) {
                 taskArrayList.remove(task);
                 taskDB.taskDao().delete(task);
                 continue;
             }
 
-            task.setDeadline(Integer.toString(updatedDeadline));
-            taskDB.taskDao().update(task);
+            if (!task.getDeadline().equals(Integer.toString(updatedDeadline))){
+                task.setIsChecked(false);
+                task.setDeadline(Integer.toString(updatedDeadline));
+                taskDB.taskDao().update(task);
+            }
+
             i++;
         }
     }

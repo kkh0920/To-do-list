@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calendarapplication.ui.home.HomeFragment;
 import com.example.calendarapplication.ui.popup.PopupActivity;
 import com.example.calendarapplication.ui.popup.PopupDelete;
 import com.example.calendarapplication.Task;
@@ -95,11 +97,16 @@ public class DashboardFragment extends Fragment {
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
-                Task task = taskArrayList.get(position);
-                task.setIsChecked(isChecked);
+                int year = Integer.parseInt(dateFormat("yyyy"));
+                int month = Integer.parseInt(dateFormat("MM"));
+                int day = Integer.parseInt(dateFormat("dd"));
+                if(curYear == year && curMonth == month - 1 && curDay == day) {
+                    Task task = taskArrayList.get(position);
+                    task.setIsChecked(isChecked);
 
-                TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
-                updatedTask.taskDao().update(task);
+                    TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
+                    updatedTask.taskDao().update(task);
+                }
             }
 
             @Override
@@ -162,15 +169,12 @@ public class DashboardFragment extends Fragment {
 
     public void loadTaskUnderCalendar(int y, int m, int d){
         int diff = calculateDeadline(y, m, d);
-        if(diff < 0) {
-            taskArrayList.clear();
-            adapter.notifyDataSetChanged();
-            return;
-        }
 
         taskDB = TaskDB.getInstance(getContext());
 
         taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
+
+        Log.e("test", taskArrayList.get(taskArrayList.size() - 1).getDeadline() + "");
 
         // 모든 일정을 탐색, 현재 선택된 날짜가 각 일정의 데드라인 안에 속하면 달력 하단에 표시
         int index = 0;
@@ -180,6 +184,9 @@ public class DashboardFragment extends Fragment {
             int month = Integer.parseInt(task.getMonth());
             int day = Integer.parseInt(task.getDay());
             int estimatedDay = Integer.parseInt(task.getEstimatedDay());
+
+            if(diff != 0)
+                task.setIsChecked(false);
 
             if(estimatedDay == 0 && (m + 1 != month || d != day))
                 taskArrayList.remove(task);

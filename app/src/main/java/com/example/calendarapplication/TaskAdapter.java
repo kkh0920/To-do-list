@@ -208,15 +208,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             initialized();
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION){
                         if (mListener != null){
                             mListener.onCheckboxClick(position, compoundButton, isChecked);
-
                         }
                     }
                 }
