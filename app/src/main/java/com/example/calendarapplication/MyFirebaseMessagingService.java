@@ -44,27 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         final TaskDB taskDB = TaskDB.getInstance(getApplicationContext());
         final ArrayList<Task> taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
 
-        int year = Integer.parseInt(dateFormat("yyyy"));
-        int month = Integer.parseInt(dateFormat("MM"));
-        int day = Integer.parseInt(dateFormat("dd"));
-
-        boolean isTodayTaskExist = false;
-        for(int i = 0; i < taskArrayList.size(); i++){
-            Task task = taskArrayList.get(i);
-
-            if(Integer.parseInt(task.getDeadline()) - Integer.parseInt(task.getEstimatedDay()) <= 0){
-                isTodayTaskExist = true;
-                break;
-            }
-
-            if(year == Integer.parseInt(task.getYear()) && month == Integer.parseInt(task.getMonth()) &&
-                        day == Integer.parseInt(task.getDay())) {
-                isTodayTaskExist = true;
-                break;
-            }
-        }
-
-        if(!isTodayTaskExist)
+        if(taskArrayList.size() == 0)
             return;
 
         /* 알림의 탭 작업 설정 */
