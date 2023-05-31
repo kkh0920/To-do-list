@@ -1,7 +1,9 @@
 package com.example.calendarapplication;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         taskViewSetting(holder, estimatedDay);
         textColorAndBoldSetting(holder, deadline, estimatedDay);
+        checkedTaskSetting(holder, item);
 
         holder.setItem(item);
     }
@@ -81,6 +84,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         items.sort(Task::compareTo);
     }
 
+    public void checkedTaskSetting(ViewHolder holder, Task task){
+        if(task.isChecked()){
+            holder.tv_task_name.setPaintFlags(holder.tv_task_name.getPaintFlags()^ Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        else{
+            holder.tv_task_name.setPaintFlags(0);
+        }
+    }
 
     public void textColorAndBoldSetting(ViewHolder holder, int deadline, int estimatedDay){
         if(deadline - estimatedDay <= 0){
@@ -205,6 +216,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     if (position != RecyclerView.NO_POSITION){
                         if (mListener != null){
                             mListener.onCheckboxClick(position, compoundButton, isChecked);
+
                         }
                     }
                 }

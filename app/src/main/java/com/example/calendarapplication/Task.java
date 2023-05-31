@@ -145,7 +145,13 @@ public class Task implements Comparable<Task> {
         int time1 = (Integer.parseInt(getHour()) * 100) + Integer.parseInt(getMinute());
         int time2 = (Integer.parseInt(task.getHour()) * 100) + Integer.parseInt(task.getMinute());
 
-        if(estimatedDay1 != 0 && estimatedDay2 != 0) {
+        int isChecked1 = isChecked() ? 1 : 0;
+        int isChecked2 = task.isChecked() ? 1 : 0;
+
+        if(isChecked1 == 0 && isChecked2 == 1 || isChecked1 == 1 && isChecked2 == 0)
+            return isChecked1 - isChecked2;
+
+        if (estimatedDay1 != 0 && estimatedDay2 != 0) {
             if ((deadline1 - estimatedDay1) == (deadline2 - estimatedDay2)) {
                 if (deadline1 == deadline2) {
                     return time1 - time2; // 3. 시간 비교
@@ -155,13 +161,13 @@ public class Task implements Comparable<Task> {
             return (deadline1 - estimatedDay1) - (deadline2 - estimatedDay2); // 1. 데드라인과 예상수행기간 비교
         }
 
-        if(estimatedDay1 == 0 && estimatedDay2 == 0){
+
+        if (estimatedDay1 == 0 && estimatedDay2 == 0) {
             if (deadline1 == deadline2) {
                 return time1 - time2;
             }
             return deadline1 - deadline2;
         }
-
         return estimatedDay2 - estimatedDay1;
     }
 }

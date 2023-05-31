@@ -5,13 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -19,9 +16,7 @@ import com.example.calendarapplication.taskDB.TaskDB;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
@@ -59,7 +54,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         /* 알림 만들기 */
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setColor(0xffffffff)
                         .setContentTitle(messageTitle)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
@@ -73,11 +69,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.createNotificationChannel(channel);
 
         notificationManager.notify(0, notificationBuilder.build());
-    }
-
-    public String dateFormat(String pattern) {
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        return new SimpleDateFormat(pattern).format(date);
     }
 }
