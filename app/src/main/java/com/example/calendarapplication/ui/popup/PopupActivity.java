@@ -40,7 +40,7 @@ public class PopupActivity extends Activity {
     private TextView tv_popup_title;
     private Button bt_deadline, bt_estimated_day, bt_time;
     private EditText et_task_name;
-    private int year = 0, month = 0, day = 0;
+    private int year = 0, month = -1, day = 0;
     private String hour = "-1", minute = "-1";
     private String estimatedDay = "-1";
     private DatePickerDialog.OnDateSetListener callbackMethod;
@@ -162,7 +162,7 @@ public class PopupActivity extends Activity {
         String name = et_task_name.getText().toString();
 
         // 데이터 입력 여부 체크
-        if(estimatedDay.equals("-1") || year == 0 || month  == 0 || day == 0){
+        if(estimatedDay.equals("-1") || year == 0 || month  == -1 || day == 0){
             Snackbar.make(v.getRootView(), "값을 입력하지 않으셨나요?", Snackbar.LENGTH_SHORT).show();
             return;
         }

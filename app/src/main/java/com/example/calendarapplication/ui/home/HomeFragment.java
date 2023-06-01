@@ -33,6 +33,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
@@ -98,6 +100,20 @@ public class HomeFragment extends Fragment {
                 TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
                 updatedTask.taskDao().update(task);
 
+                recyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int currentPosition = taskArrayList.indexOf(task);
+
+                        Collections.sort(taskArrayList);
+
+                        int newPosition = taskArrayList.indexOf(task);
+
+                        if(currentPosition != newPosition){
+                            adapter.notifyItemMoved(currentPosition, newPosition);
+                        }
+                    }
+                });
 
             }
 
@@ -183,7 +199,6 @@ public class HomeFragment extends Fragment {
 
         return (int) (diff / (24 * 60 * 60 * 1000));
     }
-
 
     // 매일 D-day 갱신
     public void updateDeadline(){

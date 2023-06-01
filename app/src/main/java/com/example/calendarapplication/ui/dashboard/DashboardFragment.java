@@ -34,6 +34,7 @@ import com.example.calendarapplication.databinding.FragmentDashboardBinding;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 public class DashboardFragment extends Fragment {
@@ -106,6 +107,21 @@ public class DashboardFragment extends Fragment {
 
                     TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
                     updatedTask.taskDao().update(task);
+                    rv_cal_task_list.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            int currentPosition = taskArrayList.indexOf(task);
+
+                            Collections.sort(taskArrayList);
+
+                            int newPosition = taskArrayList.indexOf(task);
+
+                            if(currentPosition != newPosition){
+                                adapter.notifyItemMoved(currentPosition, newPosition);
+
+                            }
+                        }
+                    });
                 }
             }
 

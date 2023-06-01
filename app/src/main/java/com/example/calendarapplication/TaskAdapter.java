@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calendarapplication.ui.home.HomeFragment;
+
 import java.util.ArrayList;
 
 // 사용자에게 보여지는 RecyclerView 와 데이터를 담고있는 ArrayList 사이를 매개하는 TaskAdapter(일정 관리를 담당)
@@ -55,7 +57,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         taskViewSetting(holder, estimatedDay);
         textColorAndBoldSetting(holder, deadline, estimatedDay);
-        checkedTaskSetting(holder, item);
 
         holder.setItem(item);
     }
@@ -82,15 +83,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public void Sorting(){
         items.sort(Task::compareTo);
-    }
-
-    public void checkedTaskSetting(ViewHolder holder, Task task){
-        if(task.isChecked()){
-            holder.tv_task_name.setPaintFlags(holder.tv_task_name.getPaintFlags()^ Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-        else{
-            holder.tv_task_name.setPaintFlags(0);
-        }
     }
 
     public void textColorAndBoldSetting(ViewHolder holder, int deadline, int estimatedDay){
@@ -208,12 +200,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             initialized();
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -221,6 +207,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     if (position != RecyclerView.NO_POSITION){
                         if (mListener != null){
                             mListener.onCheckboxClick(position, compoundButton, isChecked);
+                            if(isChecked) {
+                                tv_task_name.setPaintFlags(tv_task_name.getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
+                            }
+                            else {
+                                tv_task_name.setPaintFlags(0);
+                            }
                         }
                     }
                 }
@@ -229,7 +221,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             btn_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     int position = getAdapterPosition();
                     if (position!=RecyclerView.NO_POSITION){
                         if (mListener!=null){
