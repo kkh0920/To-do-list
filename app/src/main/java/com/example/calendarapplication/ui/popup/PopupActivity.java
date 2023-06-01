@@ -272,14 +272,13 @@ public class PopupActivity extends Activity {
                     bt_estimated_day.setText("약속");
                     bt_time.setVisibility(View.VISIBLE);
                     hour = "12";
-                    minute = "00";
                 }
                 else {
                     bt_estimated_day.setText(estimatedDay + "일 간 수행");
                     bt_time.setVisibility(View.GONE);
                     hour = "00";
-                    minute = "00";
                 }
+                minute = "00";
 
                 numberPickerDialog.dismiss();
             }
