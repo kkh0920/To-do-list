@@ -219,7 +219,6 @@ public class HomeFragment extends Fragment {
             }
 
             if (!task.getDeadline().equals(Integer.toString(updatedDeadline))){
-                task.setIsChecked(false);
                 task.setDeadline(Integer.toString(updatedDeadline));
                 taskDB.taskDao().update(task);
             }

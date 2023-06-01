@@ -118,7 +118,6 @@ public class DashboardFragment extends Fragment {
 
                             if(currentPosition != newPosition){
                                 adapter.notifyItemMoved(currentPosition, newPosition);
-
                             }
                         }
                     });
@@ -198,9 +197,6 @@ public class DashboardFragment extends Fragment {
             int month = Integer.parseInt(task.getMonth());
             int day = Integer.parseInt(task.getDay());
             int estimatedDay = Integer.parseInt(task.getEstimatedDay());
-
-            if(diff != 0)
-                task.setIsChecked(false);
 
             if(estimatedDay == 0 && (m + 1 != month || d != day))
                 taskArrayList.remove(task);
