@@ -108,7 +108,8 @@ public class DashboardFragment extends Fragment {
                 int month = Integer.parseInt(dateFormat("MM"));
                 int day = Integer.parseInt(dateFormat("dd"));
                 if(year != curYear || month - 1 != curMonth || day != curDay){
-                    ToastMessage tm = new ToastMessage(getActivity(), "오늘 날짜 에서 일정을 관리하세요.");
+                    ToastMessage tm = new ToastMessage(getActivity(),
+                            "일정 탭이나 오늘 날짜(" + month + "월 " + day + "일" + ")에서 관리하세요.");
                     checkBox.setChecked(!checkBox.isChecked());
                     return task;
                 }
@@ -142,7 +143,8 @@ public class DashboardFragment extends Fragment {
                 int month = Integer.parseInt(dateFormat("MM"));
                 int day = Integer.parseInt(dateFormat("dd"));
                 if(year != curYear || month - 1 != curMonth || day != curDay){
-                    ToastMessage tm = new ToastMessage(getActivity(), "오늘 날짜 에서 일정을 관리하세요.");
+                    ToastMessage tm = new ToastMessage(getActivity(),
+                            "일정 탭이나 오늘 날짜(" + month + "월 " + day + "일" + ")에서 관리하세요.");
                     return;
                 }
 
@@ -175,7 +177,8 @@ public class DashboardFragment extends Fragment {
                 int month = Integer.parseInt(dateFormat("MM"));
                 int day = Integer.parseInt(dateFormat("dd"));
                 if(year != curYear || month - 1 != curMonth || day != curDay){
-                    ToastMessage tm = new ToastMessage(getActivity(), "오늘 날짜 에서 일정을 관리하세요.");
+                    ToastMessage tm = new ToastMessage(getActivity(),
+                            "일정 탭이나 오늘 날짜(" + month + "월 " + day + "일" + ")에서 관리하세요.");
                     return;
                 }
 

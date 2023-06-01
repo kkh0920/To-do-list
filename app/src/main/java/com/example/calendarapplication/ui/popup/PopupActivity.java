@@ -163,7 +163,7 @@ public class PopupActivity extends Activity {
 
         // 데이터 입력 여부 체크
         if(estimatedDay.equals("-1") || year == 0 || month  == -1 || day == 0){
-            Snackbar.make(v.getRootView(), "값을 입력하지 않으셨나요?", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(v.getRootView(), "값을 모두 입력하지 않으셨나요?", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -172,7 +172,7 @@ public class PopupActivity extends Activity {
 
         // 예상 수행 기간이 마감일 보다 큰 경우 인지 체크
         if(deadline + 1 < e){
-            Snackbar.make(v.getRootView(), "수행 기간이 너무 길어요!", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(v.getRootView(), "마감일까지 일정을 못 끝낼 것 같아요..", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
