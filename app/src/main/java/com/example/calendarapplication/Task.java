@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Task implements Comparable<Task> {
     @PrimaryKey(autoGenerate = true) // 기본적으로 키 값을 가지고 있어야 함.
-    private int id;
+    private long id;
 
     // 일정 내용
     @ColumnInfo(name="task_name")
@@ -55,7 +55,7 @@ public class Task implements Comparable<Task> {
     }
 
     // ID
-    public int getId() {
+    public long getId() {
         return id;
     }
     public void setId(int id) {

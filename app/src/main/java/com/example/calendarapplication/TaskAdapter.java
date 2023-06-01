@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public interface OnItemClickListener{
-        void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked); // 체크박스
+        Task onCheckboxClick(CheckBox checkBox, int position); // 체크박스
         void onEditClick(View v, int position); //수정
         void onDeleteClick(View v, int position); //삭제
     }
@@ -59,6 +59,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         textColorAndBoldSetting(holder, deadline, estimatedDay);
 
         holder.setItem(item);
+
+        if(item.isChecked()) {
+            holder.tv_task_name.setPaintFlags(holder.tv_task_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        else {
+            holder.tv_task_name.setPaintFlags(0);
+        }
     }
 
     @Override
@@ -200,15 +207,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             initialized();
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION){
                         if (mListener != null){
-                            mListener.onCheckboxClick(position, compoundButton, isChecked);
-                            if(isChecked) {
-                                tv_task_name.setPaintFlags(tv_task_name.getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
+                            Task task = mListener.onCheckboxClick(checkBox, position);
+                            if(task.isChecked()) {
+                                tv_task_name.setPaintFlags(tv_task_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                             }
                             else {
                                 tv_task_name.setPaintFlags(0);

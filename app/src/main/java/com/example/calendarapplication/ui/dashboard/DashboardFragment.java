@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
@@ -23,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calendarapplication.ToastMessage;
 import com.example.calendarapplication.ui.home.HomeFragment;
 import com.example.calendarapplication.ui.popup.PopupActivity;
 import com.example.calendarapplication.ui.popup.PopupDelete;
@@ -45,6 +48,7 @@ public class DashboardFragment extends Fragment {
     private ArrayList<Task> taskArrayList;
     private TaskAdapter adapter;
     private TaskDB taskDB = null;
+    private Toast sToast = null;
 
     private int pos, curYear, curMonth, curDay;
 
@@ -97,35 +101,51 @@ public class DashboardFragment extends Fragment {
     public void adapterInitializer(){
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
-            public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
+            public Task onCheckboxClick(CheckBox checkBox, int position) {
+                Task task = taskArrayList.get(position);
+
                 int year = Integer.parseInt(dateFormat("yyyy"));
                 int month = Integer.parseInt(dateFormat("MM"));
                 int day = Integer.parseInt(dateFormat("dd"));
-                if(curYear == year && curMonth == month - 1 && curDay == day) {
-                    Task task = taskArrayList.get(position);
-                    task.setIsChecked(isChecked);
-
-                    TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
-                    updatedTask.taskDao().update(task);
-                    rv_cal_task_list.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int currentPosition = taskArrayList.indexOf(task);
-
-                            Collections.sort(taskArrayList);
-
-                            int newPosition = taskArrayList.indexOf(task);
-
-                            if(currentPosition != newPosition){
-                                adapter.notifyItemMoved(currentPosition, newPosition);
-                            }
-                        }
-                    });
+                if(year != curYear || month - 1 != curMonth || day != curDay){
+                    ToastMessage tm = new ToastMessage(getActivity(), "오늘 날짜 에서 일정을 관리하세요.");
+                    checkBox.setChecked(!checkBox.isChecked());
+                    return task;
                 }
+
+                task.setIsChecked(checkBox.isChecked());
+
+                TaskDB updatedTask = TaskDB.getInstance(getContext());
+                updatedTask.taskDao().update(task);
+
+                rv_cal_task_list.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int currentPosition = taskArrayList.indexOf(task);
+
+                        Collections.sort(taskArrayList);
+
+                        int newPosition = taskArrayList.indexOf(task);
+
+                        if(currentPosition != newPosition){
+                            adapter.notifyItemMoved(currentPosition, newPosition);
+                        }
+                    }
+                });
+
+                return task;
             }
 
             @Override
             public void onEditClick(View v, int position) {
+                int year = Integer.parseInt(dateFormat("yyyy"));
+                int month = Integer.parseInt(dateFormat("MM"));
+                int day = Integer.parseInt(dateFormat("dd"));
+                if(year != curYear || month - 1 != curMonth || day != curDay){
+                    ToastMessage tm = new ToastMessage(getActivity(), "오늘 날짜 에서 일정을 관리하세요.");
+                    return;
+                }
+
                 Task task = taskArrayList.get(position);
 
                 Intent intent = new Intent(getContext(), PopupActivity.class);
@@ -151,6 +171,14 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onDeleteClick(View v, int position) {
+                int year = Integer.parseInt(dateFormat("yyyy"));
+                int month = Integer.parseInt(dateFormat("MM"));
+                int day = Integer.parseInt(dateFormat("dd"));
+                if(year != curYear || month - 1 != curMonth || day != curDay){
+                    ToastMessage tm = new ToastMessage(getActivity(), "오늘 날짜 에서 일정을 관리하세요.");
+                    return;
+                }
+
                 pos = position;
 
                 Intent intent = new Intent(getContext(), PopupDelete.class);
@@ -207,7 +235,6 @@ public class DashboardFragment extends Fragment {
                 index++;
             }
         }
-
         adapter = new TaskAdapter(taskArrayList);
         adapterInitializer();
 
@@ -255,17 +282,35 @@ public class DashboardFragment extends Fragment {
                         int deadline = calculateDeadline(year, month - 1, day);
 
                         Task task = adapter.getItem(pos);
-                        TaskDB.getInstance(getContext()).taskDao().delete(task);
+//                            TaskDB.getInstance(getContext()).taskDao().delete(task);
+                        editTask(task, name, Integer.toString(year), m, d, hour, minute,
+                                Integer.toString(deadline), estimatedDay);
 
-                        Task newTask = new Task(name,
-                                Integer.toString(year), m, d, hour, minute,
-                                Integer.toString(deadline), estimatedDay, false);
+                        TaskDB.getInstance(getContext()).taskDao().update(task);
 
-                        TaskDB.getInstance(getContext()).taskDao().insertAll(newTask);
-                        loadTaskUnderCalendar(curYear, curMonth, curDay);
+                        int currentPosition = taskArrayList.indexOf(task);
+
+                        Collections.sort(taskArrayList);
+
+                        int newPosition = taskArrayList.indexOf(task);
+
+                        adapter.notifyItemMoved(currentPosition, newPosition);
+                        adapter.notifyItemChanged(newPosition);
                     }
                 }
             });
+
+    public void editTask(Task task, String name, String year, String month, String day,
+                         String hour, String minute, String deadline, String estimatedDay){
+        task.setTaskName(name);
+        task.setYear(year);
+        task.setMonth(month);
+        task.setDay(day);
+        task.setHour(hour);
+        task.setMinute(minute);
+        task.setDeadline(deadline);
+        task.setEstimatedDay(estimatedDay);
+    }
 
     ActivityResultLauncher<Intent> launcherDel = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {

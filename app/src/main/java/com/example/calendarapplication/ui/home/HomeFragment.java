@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -93,11 +95,11 @@ public class HomeFragment extends Fragment {
     public void adapterInitializer(){
         adapter.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
-            public void onCheckboxClick(int position, CompoundButton compoundButton, boolean isChecked) {
+            public Task onCheckboxClick(CheckBox checkBox, int position) {
                 Task task = taskArrayList.get(position);
-                task.setIsChecked(isChecked);
+                task.setIsChecked(checkBox.isChecked());
 
-                TaskDB updatedTask = TaskDB.getInstance(compoundButton.getContext());
+                TaskDB updatedTask = TaskDB.getInstance(getContext());
                 updatedTask.taskDao().update(task);
 
                 recyclerView.post(new Runnable() {
@@ -115,6 +117,7 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
+                return task;
             }
 
             @Override
@@ -271,20 +274,55 @@ public class HomeFragment extends Fragment {
                         boolean isEdit = intent.getBooleanExtra("isEdit", false);
                         if(isEdit){
                             Task task = adapter.getItem(pos);
-                            TaskDB.getInstance(getContext()).taskDao().delete(task);
+//                            TaskDB.getInstance(getContext()).taskDao().delete(task);
+                            editTask(task, name, Integer.toString(year), m, d, hour, minute,
+                                    Integer.toString(deadline), estimatedDay);
+
+                            TaskDB.getInstance(getContext()).taskDao().update(task);
+
+                            int currentPosition = taskArrayList.indexOf(task);
+
+                            Collections.sort(taskArrayList);
+
+                            int newPosition = taskArrayList.indexOf(task);
+
+                            adapter.notifyItemMoved(currentPosition, newPosition);
+                            adapter.notifyItemChanged(newPosition);
                         }
+                        else{
+                            // 데이터 추가
+                            Task task = new Task(name,
+                                    Integer.toString(year), m, d, hour, minute,
+                                    Integer.toString(deadline), estimatedDay, false);
 
-                        // 데이터 추가
-                        Task task = new Task(name,
-                                Integer.toString(year), m, d, hour, minute,
-                                Integer.toString(deadline), estimatedDay, false);
+                            TaskDB taskDB = TaskDB.getInstance(getContext());
+                            long insertedId = taskDB.taskDao().insert(task);
 
-                        TaskDB.getInstance(getContext()).taskDao().insertAll(task);
-                        loadTaskAll();
+                            Task insertedTask = taskDB.taskDao().getTaskById(insertedId);
 
+                            taskArrayList.add(insertedTask);
+
+                            Collections.sort(taskArrayList);
+
+                            int newPos = taskArrayList.indexOf(insertedTask);
+
+                            adapter.notifyItemInserted(newPos);
+                        }
                     }
                 }
             });
+
+    public void editTask(Task task, String name, String year, String month, String day,
+                         String hour, String minute, String deadline, String estimatedDay){
+        task.setTaskName(name);
+        task.setYear(year);
+        task.setMonth(month);
+        task.setDay(day);
+        task.setHour(hour);
+        task.setMinute(minute);
+        task.setDeadline(deadline);
+        task.setEstimatedDay(estimatedDay);
+    }
 
     ActivityResultLauncher<Intent> launcherDel = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
