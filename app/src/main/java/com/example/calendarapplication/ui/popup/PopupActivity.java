@@ -58,9 +58,9 @@ public class PopupActivity extends Activity {
 
         // 변수 초기화
         initialized();
-
         bt_time.setVisibility(View.GONE);
 
+        // "일정 추가" 인지, "일정 수정" 인지 체크함.
         checkEditOrAdd();
 
         // 달력에서 확인 버튼 클릭
@@ -105,18 +105,22 @@ public class PopupActivity extends Activity {
 
         et_task_name.setText(intent.getStringExtra("name"));
 
+        // 기존 마감일 설정
         String syear = intent.getStringExtra("year");
         String smonth = intent.getStringExtra("month");
         String sday = intent.getStringExtra("day");
+
         bt_deadline.setText(syear + " / " + smonth + " / " + sday);
 
         year = Integer.parseInt(syear);
         month = Integer.parseInt(smonth) - 1;
         day = Integer.parseInt(sday);
 
+        // 기존 예상 수행 시간 설정
         String estimate = intent.getStringExtra("estimatedDay");
         estimatedDay = estimate;
 
+        // 약속, 과제 여부 체크 후 기존 값 설정
         if(estimate.equals("0")){
             bt_estimated_day.setText("약속");
 
@@ -137,7 +141,7 @@ public class PopupActivity extends Activity {
         }
     }
 
-    public String dateFormat(String pattern) {
+    public String getTodayDate(String pattern) {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         return new SimpleDateFormat(pattern).format(date);
@@ -213,9 +217,9 @@ public class PopupActivity extends Activity {
 
     // 달력 팝업창
     public void onClickDeadlineButton(View v){
-        int year = Integer.parseInt(dateFormat("yyyy"));
-        int month = Integer.parseInt(dateFormat("MM"));
-        int day = Integer.parseInt(dateFormat("dd"));
+        int year = Integer.parseInt(getTodayDate("yyyy"));
+        int month = Integer.parseInt(getTodayDate("MM"));
+        int day = Integer.parseInt(getTodayDate("dd"));
 
         DatePickerDialog dialog;
 
@@ -294,6 +298,7 @@ public class PopupActivity extends Activity {
         numberPickerDialog.show();
     }
 
+    // "약속"의 경우 시간 선택 팝업창 표시
     public void showTimePicker(View v){
         final Dialog timePickerDialog = new Dialog(this);
         timePickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

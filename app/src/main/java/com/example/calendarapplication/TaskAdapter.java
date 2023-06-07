@@ -26,8 +26,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public interface OnItemClickListener{
         Task onCheckboxClick(CheckBox checkBox, int position); // 체크박스
-        void onEditClick(View v, int position); //수정
-        void onDeleteClick(View v, int position); //삭제
+        void onEditClick(View v, int position); // 수정
+        void onDeleteClick(View v, int position); // 삭제
     }
     private OnItemClickListener mListener = null;
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -207,6 +207,41 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             initialized();
+            initializer();
+        }
+
+        public void initialized(){
+            taskCardView = itemView.findViewById(R.id.task_card_view);
+
+            tv_task_name = itemView.findViewById(R.id.tv_task_name);
+
+            tv_month = itemView.findViewById(R.id.tv_month);
+            tv_day_format = itemView.findViewById(R.id.tv_day_format);
+            tv_day = itemView.findViewById(R.id.tv_day);
+
+            tv_divider = itemView.findViewById(R.id.tv_divider);
+
+            tv_hour = itemView.findViewById(R.id.tv_hour);
+            tv_time_format = itemView.findViewById(R.id.tv_time_format);
+            tv_minute = itemView.findViewById(R.id.tv_minute);
+
+            tv_deadline = itemView.findViewById(R.id.tv_deadline);
+            tv_deadline_format = itemView.findViewById(R.id.tv_deadline_format);
+
+            tv_estimated_day_name = itemView.findViewById(R.id.tv_estimated_day_name);
+            tv_estimatedDay = itemView.findViewById(R.id.tv_estimated_day);
+            tv_estimated_day_format = itemView.findViewById(R.id.tv_estimated_day_format);
+
+            checkBox = itemView.findViewById(R.id.checkBox);
+
+            btn_delete = itemView.findViewById(R.id.btn_delete);
+
+            btn_edit = itemView.findViewById(R.id.btn_edit);
+
+            ll_taskcell = itemView.findViewById(R.id.task_cell_layout);
+        }
+
+        public void initializer(){
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -248,37 +283,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     }
                 }
             });
-        }
-
-        public void initialized(){
-            taskCardView = itemView.findViewById(R.id.task_card_view);
-
-            tv_task_name = itemView.findViewById(R.id.tv_task_name);
-
-            tv_month = itemView.findViewById(R.id.tv_month);
-            tv_day_format = itemView.findViewById(R.id.tv_day_format);
-            tv_day = itemView.findViewById(R.id.tv_day);
-
-            tv_divider = itemView.findViewById(R.id.tv_divider);
-
-            tv_hour = itemView.findViewById(R.id.tv_hour);
-            tv_time_format = itemView.findViewById(R.id.tv_time_format);
-            tv_minute = itemView.findViewById(R.id.tv_minute);
-
-            tv_deadline = itemView.findViewById(R.id.tv_deadline);
-            tv_deadline_format = itemView.findViewById(R.id.tv_deadline_format);
-
-            tv_estimated_day_name = itemView.findViewById(R.id.tv_estimated_day_name);
-            tv_estimatedDay = itemView.findViewById(R.id.tv_estimated_day);
-            tv_estimated_day_format = itemView.findViewById(R.id.tv_estimated_day_format);
-
-            checkBox = itemView.findViewById(R.id.checkBox);
-
-            btn_delete = itemView.findViewById(R.id.btn_delete);
-
-            btn_edit = itemView.findViewById(R.id.btn_edit);
-
-            ll_taskcell = itemView.findViewById(R.id.task_cell_layout);
         }
 
         public void setItem(final Task item){

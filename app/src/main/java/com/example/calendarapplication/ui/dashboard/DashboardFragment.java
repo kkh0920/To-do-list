@@ -59,13 +59,14 @@ public class DashboardFragment extends Fragment {
 
         initialized();
 
-        int year = Integer.parseInt(dateFormat("yyyy"));
-        int month = Integer.parseInt(dateFormat("MM"));
-        int day = Integer.parseInt(dateFormat("dd"));
+        int year = Integer.parseInt(getTodayDate("yyyy"));
+        int month = Integer.parseInt(getTodayDate("MM"));
+        int day = Integer.parseInt(getTodayDate("dd"));
 
         curYear = year;
         curMonth = month - 1;
         curDay = day;
+
         loadTaskUnderCalendar(year, month - 1, day);
 
         Calendar minDate = Calendar.getInstance();
@@ -80,6 +81,7 @@ public class DashboardFragment extends Fragment {
                 curYear = year;
                 curMonth = month;
                 curDay = dayOfMonth;
+
                 loadTaskUnderCalendar(year, month, dayOfMonth);
             }
         });
@@ -104,12 +106,12 @@ public class DashboardFragment extends Fragment {
             public Task onCheckboxClick(CheckBox checkBox, int position) {
                 Task task = taskArrayList.get(position);
 
-                int year = Integer.parseInt(dateFormat("yyyy"));
-                int month = Integer.parseInt(dateFormat("MM"));
-                int day = Integer.parseInt(dateFormat("dd"));
-                if(year != curYear || month - 1 != curMonth || day != curDay){
+                int todayYear = Integer.parseInt(getTodayDate("yyyy"));
+                int todayMonth = Integer.parseInt(getTodayDate("MM"));
+                int todayDay = Integer.parseInt(getTodayDate("dd"));
+                if(todayYear != curYear || todayMonth - 1 != curMonth || todayDay != curDay){
                     ToastMessage tm = new ToastMessage(getActivity(),
-                            "일정 탭이나 오늘 날짜(" + month + "월 " + day + "일" + ")에서 관리하세요.");
+                            "일정 탭이나 오늘 날짜(" + todayMonth + "월 " + todayDay + "일" + ")에서 관리하세요.");
                     checkBox.setChecked(!checkBox.isChecked());
                     return task;
                 }
@@ -139,12 +141,12 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onEditClick(View v, int position) {
-                int year = Integer.parseInt(dateFormat("yyyy"));
-                int month = Integer.parseInt(dateFormat("MM"));
-                int day = Integer.parseInt(dateFormat("dd"));
-                if(year != curYear || month - 1 != curMonth || day != curDay){
+                int todayYear = Integer.parseInt(getTodayDate("yyyy"));
+                int todayMonth = Integer.parseInt(getTodayDate("MM"));
+                int todayDay = Integer.parseInt(getTodayDate("dd"));
+                if(todayYear != curYear || todayMonth - 1 != curMonth || todayDay != curDay){
                     ToastMessage tm = new ToastMessage(getActivity(),
-                            "일정 탭이나 오늘 날짜(" + month + "월 " + day + "일" + ")에서 관리하세요.");
+                            "일정 탭이나 오늘 날짜(" + todayMonth + "월 " + todayDay + "일" + ")에서 관리하세요.");
                     return;
                 }
 
@@ -173,12 +175,12 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onDeleteClick(View v, int position) {
-                int year = Integer.parseInt(dateFormat("yyyy"));
-                int month = Integer.parseInt(dateFormat("MM"));
-                int day = Integer.parseInt(dateFormat("dd"));
-                if(year != curYear || month - 1 != curMonth || day != curDay){
+                int todayYear = Integer.parseInt(getTodayDate("yyyy"));
+                int todayMonth = Integer.parseInt(getTodayDate("MM"));
+                int todayDay = Integer.parseInt(getTodayDate("dd"));
+                if(todayYear != curYear || todayMonth - 1 != curMonth || todayDay != curDay){
                     ToastMessage tm = new ToastMessage(getActivity(),
-                            "일정 탭이나 오늘 날짜(" + month + "월 " + day + "일" + ")에서 관리하세요.");
+                            "일정 탭이나 오늘 날짜(" + todayMonth + "월 " + todayDay + "일" + ")에서 관리하세요.");
                     return;
                 }
 
@@ -194,7 +196,7 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    public String dateFormat(String pattern) {
+    public String getTodayDate(String pattern) {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         return new SimpleDateFormat(pattern).format(date);

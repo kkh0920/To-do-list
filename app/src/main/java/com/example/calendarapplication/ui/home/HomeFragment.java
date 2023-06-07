@@ -274,7 +274,7 @@ public class HomeFragment extends Fragment {
                         boolean isEdit = intent.getBooleanExtra("isEdit", false);
                         if(isEdit){
                             Task task = adapter.getItem(pos);
-//                            TaskDB.getInstance(getContext()).taskDao().delete(task);
+
                             editTask(task, name, Integer.toString(year), m, d, hour, minute,
                                     Integer.toString(deadline), estimatedDay);
 
