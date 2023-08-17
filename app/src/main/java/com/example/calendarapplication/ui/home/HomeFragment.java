@@ -215,12 +215,6 @@ public class HomeFragment extends Fragment {
 
             int updatedDeadline = calculateDeadline(year, month, day);
 
-            if (updatedDeadline < 0) {
-                taskArrayList.remove(task);
-                taskDB.taskDao().delete(task);
-                continue;
-            }
-
             if (!task.getDeadline().equals(Integer.toString(updatedDeadline))){
                 task.setDeadline(Integer.toString(updatedDeadline));
                 taskDB.taskDao().update(task);

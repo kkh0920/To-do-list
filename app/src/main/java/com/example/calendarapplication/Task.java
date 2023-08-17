@@ -151,6 +151,9 @@ public class Task implements Comparable<Task> {
         if(isChecked1 == 0 && isChecked2 == 1 || isChecked1 == 1 && isChecked2 == 0)
             return isChecked1 - isChecked2;
 
+        if(deadline1 < 0 && deadline2 >= 0 || deadline1 >= 0 && deadline2 < 0)
+            return deadline2 - deadline1;
+
         if (estimatedDay1 != 0 && estimatedDay2 != 0) {
             if ((deadline1 - estimatedDay1) == (deadline2 - estimatedDay2)) {
                 if (deadline1 == deadline2) {

@@ -39,7 +39,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         final TaskDB taskDB = TaskDB.getInstance(getApplicationContext());
         final ArrayList<Task> taskArrayList = (ArrayList<Task>) taskDB.taskDao().getAll();
 
-        if(taskArrayList.size() == 0)
+        boolean isTaskExist = false;
+        for(int i = 0; i < taskArrayList.size(); i++){
+            if(Integer.parseInt(taskArrayList.get(i).getDeadline()) >= 0){
+                isTaskExist = true;
+                break;
+            }
+        }
+
+        if(!isTaskExist)
             return;
 
         /* 알림의 탭 작업 설정 */
