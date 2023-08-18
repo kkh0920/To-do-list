@@ -257,6 +257,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
 
         public void initializer(){
+            taskCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        if(tv_task_name.getMaxLines() == 1)
+                            tv_task_name.setMaxLines(100);
+                        else
+                            tv_task_name.setMaxLines(1);
+                    }
+                }
+            });
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

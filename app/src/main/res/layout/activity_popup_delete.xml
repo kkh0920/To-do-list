@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="270dp"
+    android:layout_width="310dp"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_round"
     android:orientation="vertical" >
@@ -8,32 +8,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         android:orientation="horizontal"
         android:gravity="center">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:text="- "
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+
         <TextView
             android:id="@+id/tv_task_name_del"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="#000000"
             android:text="자바 최종발표"
             android:textSize="16sp"
             android:textStyle="bold"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:text=" -"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+
     </LinearLayout>
 
 
@@ -41,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="30dp"
         android:textColor="#000000"
         android:text="일정을 삭제하시겠습니까?"
         android:textSize="16sp"/>
@@ -63,7 +55,9 @@
             android:textColor="#8E8888"
             android:background="#00000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="start|center"/>
         <Button
             android:id="@+id/btn_ok_del"
             android:text="삭제"
@@ -71,7 +65,9 @@
             android:textColor="#FF0000"
             android:background="#00000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="end|center"/>
     </LinearLayout>
 
 </LinearLayout>

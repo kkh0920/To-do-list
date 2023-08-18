@@ -35,7 +35,7 @@
             android:layout_width="247dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:maxLength="12"
+            android:maxLength="100"
             android:hint="내용" />
 
 
