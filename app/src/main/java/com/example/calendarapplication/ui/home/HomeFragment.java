@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
 
         // "일정을 추가해 보세요!" 텍스트 표시 유무
         if(adapter.getItemCount() > 0)
-            tv_temp_text.setVisibility(View.INVISIBLE);
+            tv_temp_text.setVisibility(View.GONE);
         else
             tv_temp_text.setVisibility(View.VISIBLE);
 
@@ -233,7 +233,7 @@ public class HomeFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_OK)
                     {
-                        tv_temp_text.setVisibility(View.INVISIBLE);
+                        tv_temp_text.setVisibility(View.GONE);
 
                         // 데이터 받기오기
                         Intent intent = result.getData();

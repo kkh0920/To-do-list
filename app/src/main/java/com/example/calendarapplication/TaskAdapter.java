@@ -1,5 +1,7 @@
 package com.example.calendarapplication;
 
+import static java.lang.Integer.getInteger;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -93,21 +95,35 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void textColorAndBoldSetting(ViewHolder holder, int deadline, int estimatedDay){
-        if(deadline - estimatedDay <= 0 && deadline >= 0){
-            holder.tv_hour.setTextColor(Color.parseColor("#6579FF"));
-            holder.tv_time_format.setTextColor(Color.parseColor("#6579FF"));
-            holder.tv_minute.setTextColor(Color.parseColor("#6579FF"));
-
-            holder.tv_estimatedDay.setTextColor(Color.parseColor("#FF7965"));
-            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#FF7965"));
-
-            holder.tv_hour.setTextColor(Color.parseColor("#6579FF"));
-            holder.tv_time_format.setTextColor(Color.parseColor("#6579FF"));
-            holder.tv_minute.setTextColor(Color.parseColor("#6579FF"));
-
+        if(deadline == 0){
             holder.tv_hour.setTypeface(Typeface.DEFAULT_BOLD);
             holder.tv_time_format.setTypeface(Typeface.DEFAULT_BOLD);
             holder.tv_minute.setTypeface(Typeface.DEFAULT_BOLD);
+
+            if(estimatedDay == 0){
+                holder.tv_hour.setTextColor(Color.parseColor("#6579FF"));
+                holder.tv_time_format.setTextColor(Color.parseColor("#6579FF"));
+                holder.tv_minute.setTextColor(Color.parseColor("#6579FF"));
+            }
+            else{
+                holder.tv_hour.setTextColor(Color.parseColor("#FF7965"));
+                holder.tv_time_format.setTextColor(Color.parseColor("#FF7965"));
+                holder.tv_minute.setTextColor(Color.parseColor("#FF7965"));
+            }
+        }
+        else{
+            holder.tv_hour.setTypeface(Typeface.DEFAULT);
+            holder.tv_time_format.setTypeface(Typeface.DEFAULT);
+            holder.tv_minute.setTypeface(Typeface.DEFAULT);
+
+            holder.tv_hour.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_time_format.setTextColor(Color.parseColor("#7A7777"));
+            holder.tv_minute.setTextColor(Color.parseColor("#7A7777"));
+        }
+
+        if(deadline - estimatedDay <= 0 && deadline >= 0){
+            holder.tv_estimatedDay.setTextColor(Color.parseColor("#FF7965"));
+            holder.tv_estimated_day_format.setTextColor(Color.parseColor("#FF7965"));
 
             holder.tv_estimatedDay.setTypeface(Typeface.DEFAULT_BOLD);
             holder.tv_estimated_day_format.setTypeface(Typeface.DEFAULT_BOLD);
@@ -129,19 +145,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             }
         }
         else{
-            holder.tv_hour.setTypeface(Typeface.DEFAULT);
-            holder.tv_time_format.setTypeface(Typeface.DEFAULT);
-            holder.tv_minute.setTypeface(Typeface.DEFAULT);
-
             holder.tv_estimatedDay.setTypeface(Typeface.DEFAULT);
             holder.tv_estimated_day_format.setTypeface(Typeface.DEFAULT);
 
             holder.tv_deadline.setTypeface(Typeface.DEFAULT);
             holder.tv_deadline_format.setTypeface(Typeface.DEFAULT);
-
-            holder.tv_hour.setTextColor(Color.parseColor("#7A7777"));
-            holder.tv_time_format.setTextColor(Color.parseColor("#7A7777"));
-            holder.tv_minute.setTextColor(Color.parseColor("#7A7777"));
 
             holder.tv_estimatedDay.setTextColor(Color.parseColor("#7A7777"));
             holder.tv_estimated_day_format.setTextColor(Color.parseColor("#7A7777"));
@@ -159,6 +167,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.tv_day_format.setVisibility(View.VISIBLE);
             holder.tv_day.setVisibility(View.VISIBLE);
             holder.tv_divider.setVisibility(View.VISIBLE);
+            holder.tv_div.setVisibility(View.VISIBLE);
             holder.tv_hour.setVisibility(View.VISIBLE);
             holder.tv_time_format.setVisibility(View.VISIBLE);
             holder.tv_minute.setVisibility(View.VISIBLE);
@@ -175,8 +184,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         else {
             holder.tv_month.setVisibility(View.GONE);
             holder.tv_day_format.setVisibility(View.GONE);
-            holder. tv_day.setVisibility(View.GONE);
+            holder.tv_day.setVisibility(View.GONE);
             holder.tv_divider.setVisibility(View.GONE);
+            holder.tv_div.setVisibility(View.GONE);
             holder.tv_hour.setVisibility(View.GONE);
             holder.tv_time_format.setVisibility(View.GONE);
             holder.tv_minute.setVisibility(View.GONE);
@@ -197,13 +207,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.tv_day.setVisibility(View.VISIBLE);
             holder.tv_divider.setVisibility(View.VISIBLE);
 
+            holder.tv_div.setVisibility(View.VISIBLE);
+
+            holder.tv_hour.setVisibility(View.VISIBLE);
+            holder.tv_time_format.setVisibility(View.VISIBLE);
+            holder.tv_minute.setVisibility(View.VISIBLE);
+
             holder.tv_estimated_day_name.setVisibility(View.GONE);
             holder.tv_estimatedDay.setVisibility(View.GONE);
             holder.tv_estimated_day_format.setVisibility(View.GONE);
 
             holder.taskCardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            holder.taskCardView.setCardElevation(3);
 
             holder.tv_deadline_format.setVisibility(View.GONE);
+        }
+        else{
+            holder.taskCardView.setCardElevation(0);
         }
     }
 
@@ -211,7 +231,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         private CardView taskCardView;
         private TextView tv_task_name;
         private TextView tv_month, tv_day_format, tv_day;
-        private TextView tv_divider;
+        private TextView tv_divider, tv_div;
         private TextView tv_hour, tv_time_format, tv_minute;
         private TextView tv_deadline, tv_deadline_format;
         private TextView tv_estimated_day_name, tv_estimatedDay, tv_estimated_day_format;
@@ -235,6 +255,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tv_day = itemView.findViewById(R.id.tv_day);
 
             tv_divider = itemView.findViewById(R.id.tv_divider);
+
+            tv_div = itemView.findViewById(R.id.tv_div);
 
             tv_hour = itemView.findViewById(R.id.tv_hour);
             tv_time_format = itemView.findViewById(R.id.tv_time_format);
@@ -260,12 +282,43 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             taskCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int estimatedDay = Integer.parseInt(tv_estimatedDay.getText().toString());
+                    String deadline = tv_deadline.getText().toString();
+
                     int position = getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION){
-                        if(tv_task_name.getMaxLines() == 1)
-                            tv_task_name.setMaxLines(100);
-                        else
+                        if(tv_task_name.getMaxLines() == 1) {
+                            tv_task_name.setMaxLines(1000);
+
+                            if(estimatedDay > 0 && !deadline.equals("End")){
+                                tv_month.setVisibility(View.VISIBLE);
+                                tv_day_format.setVisibility(View.VISIBLE);
+                                tv_day.setVisibility(View.VISIBLE);
+                                tv_divider.setVisibility(View.VISIBLE);
+
+                                tv_div.setVisibility(View.VISIBLE);
+
+                                tv_hour.setVisibility(View.VISIBLE);
+                                tv_time_format.setVisibility(View.VISIBLE);
+                                tv_minute.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        else {
                             tv_task_name.setMaxLines(1);
+
+                            if(estimatedDay > 0 && !deadline.equals("End")){
+                                tv_month.setVisibility(View.GONE);
+                                tv_day_format.setVisibility(View.GONE);
+                                tv_day.setVisibility(View.GONE);
+                                tv_divider.setVisibility(View.GONE);
+
+                                tv_div.setVisibility(View.GONE);
+
+                                tv_hour.setVisibility(View.GONE);
+                                tv_time_format.setVisibility(View.GONE);
+                                tv_minute.setVisibility(View.GONE);
+                            }
+                        }
                     }
                 }
             });
@@ -325,15 +378,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 tv_deadline.setText("End");
             }
 
-            if(item.getEstimatedDay().equals("0")){
-                tv_month.setText(item.getMonth());
-                tv_day.setText(item.getDay());
-                tv_hour.setText(item.getHour());
-                tv_minute.setText(item.getMinute());
-            }
-            else {
-                tv_estimatedDay.setText(item.getEstimatedDay());
-            }
+            tv_month.setText(item.getMonth());
+            tv_day.setText(item.getDay());
+            tv_hour.setText(item.getHour());
+            tv_minute.setText(item.getMinute());
+
+            tv_estimatedDay.setText(item.getEstimatedDay());
 
             checkBox.setChecked(item.isChecked());
         }

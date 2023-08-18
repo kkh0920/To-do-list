@@ -58,7 +58,6 @@ public class PopupActivity extends Activity {
 
         // 변수 초기화
         initialized();
-        bt_time.setVisibility(View.GONE);
 
         // "일정 추가" 인지, "일정 수정" 인지 체크함.
         checkEditOrAdd();
@@ -123,22 +122,18 @@ public class PopupActivity extends Activity {
         // 약속, 과제 여부 체크 후 기존 값 설정
         if(estimate.equals("0")){
             bt_estimated_day.setText("약속");
-
-            bt_time.setVisibility(View.VISIBLE);
-
-            String h = intent.getStringExtra("hour");
-            String m = intent.getStringExtra("minute");
-
-            hour = h;
-            minute = m;
-
-            bt_time.setText(hour + " : " + minute);
         }
         else{
             bt_estimated_day.setText(intent.getStringExtra("estimatedDay") + "일 간 수행");
-            hour = "00";
-            minute = "00";
         }
+
+        String h = intent.getStringExtra("hour");
+        String m = intent.getStringExtra("minute");
+
+        hour = h;
+        minute = m;
+
+        bt_time.setText(hour + " : " + minute);
     }
 
     public String getTodayDate(String pattern) {
@@ -166,7 +161,8 @@ public class PopupActivity extends Activity {
         String name = et_task_name.getText().toString();
 
         // 데이터 입력 여부 체크
-        if(estimatedDay.equals("-1") || year == 0 || month  == -1 || day == 0){
+        if(estimatedDay.equals("-1") || year == 0 || month  == -1 || day == 0 ||
+                hour.equals("-1") || minute.equals("-1")){
             Snackbar.make(v.getRootView(), "값을 모두 입력하지 않으셨나요?", Snackbar.LENGTH_SHORT).show();
             return;
         }
@@ -274,19 +270,15 @@ public class PopupActivity extends Activity {
 
                 if(estimatedDay.equals("0")) {
                     bt_estimated_day.setText("약속");
-                    bt_time.setVisibility(View.VISIBLE);
-                    hour = "12";
                 }
                 else {
                     bt_estimated_day.setText(estimatedDay + "일 간 수행");
-                    bt_time.setVisibility(View.GONE);
-                    hour = "00";
                 }
-                minute = "00";
 
                 numberPickerDialog.dismiss();
             }
         });
+
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override

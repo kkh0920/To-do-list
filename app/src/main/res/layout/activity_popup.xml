@@ -30,13 +30,13 @@
             android:id="@+id/et_task_name"
             android:textSize="15sp"
             android:alpha="0.87"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             android:layout_marginBottom="5dp"
             android:layout_width="247dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:maxLength="100"
-            android:hint="내용" />
+            android:maxLength="500"
+            android:hint="일정을 입력하세요. (최대 500자)" />
 
 
         <LinearLayout
@@ -64,30 +64,30 @@
                 android:layout_weight="1"/>
 
             <Button
-                android:id="@+id/bt_estimated_day"
+                android:id="@+id/bt_time"
                 android:layout_width="116dp"
                 android:layout_height="32dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="예상수행기간"
+                android:text="시간"
                 android:textColor="#8E8888"
                 android:textSize="15sp"
-                android:onClick="showEstimatedDayPicker"
+                android:onClick="showTimePicker"
                 android:background="@drawable/button_layout"
                 style="?android:attr/borderlessButtonStyle" />
 
         </LinearLayout>
 
         <Button
-            android:id="@+id/bt_time"
-            android:layout_width="75dp"
+            android:id="@+id/bt_estimated_day"
+            android:layout_width="116dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:text="12 : 00"
+            android:text="예상수행기간"
             android:textColor="#8E8888"
             android:textSize="15sp"
-            android:onClick="showTimePicker"
+            android:onClick="showEstimatedDayPicker"
             android:background="@drawable/button_layout"
             style="?android:attr/borderlessButtonStyle" />
 
@@ -126,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClickOKButton"/>
-    </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

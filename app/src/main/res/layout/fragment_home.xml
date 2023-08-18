@@ -41,15 +41,6 @@
 
         </LinearLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_task_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:scrollbarFadeDuration="1"/>
-
-
         <TextView
             android:id="@+id/tv_temp_text"
             android:layout_width="wrap_content"
@@ -59,6 +50,13 @@
             android:text="일정을 추가해보세요!"
             android:textSize="30sp"
             android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_task_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:scrollbarFadeDuration="1"/>
 
     </LinearLayout>
 
