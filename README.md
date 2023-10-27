@@ -1,6 +1,6 @@
 <h1 align="center"><b>To-do list</b></h1>
 
-![title](https://github.com/kkh0920/To-do-list/assets/65442366/7790f3e1-3590-420e-8478-b7a31fe774ac)
+![title](https://github.com/kkh0920/To-do-list/assets/65442366/08a5385c-56d2-4618-bca3-88c238eec3b3)
 
 ## Description
 
