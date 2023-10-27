@@ -8,7 +8,7 @@
 
 ## How to Play
 
-### 일정 추가
+### Add new task
 
 <img width="253" alt="1" src="https://github.com/kkh0920/To-do-list/assets/65442366/80f406ed-ac52-45ae-8d60-44d388d4bf9c">
 
@@ -32,7 +32,7 @@
 
 - 입력한 일정이 동적으로 리스트에 추가됩니다.
 
-### 일정 수정
+### Edit task
 
 <img width="23" alt="스크린샷 2023-10-28 오전 8 00 44" src="https://github.com/kkh0920/To-do-list/assets/65442366/7d894934-358c-4e30-9fd6-0951a9421a2e">
 
@@ -42,7 +42,7 @@
 
 - 일정의 각 내용을 수정할 수 있습니다.
 
-### 일정 세부사항
+### Show detailed task
 
 <img width="254" alt="before" src="https://github.com/kkh0920/To-do-list/assets/65442366/ffa33513-eb4f-4e8c-8347-1b504a1713f4">
 
@@ -50,14 +50,14 @@
 
 - 등록된 일정을 클릭하면 해당 일정에 대한 세부사항이 표시됩니다.
 
-### 일정 체크
+### Check task
 
 <img width="253" alt="스크린샷 2023-10-28 오전 7 32 21" src="https://github.com/kkh0920/To-do-list/assets/65442366/9ee54629-72f7-40e1-a863-f6ad1f855bba">
 
 - 일정을 해결했으면 좌측 박스를 클릭하세요.
 - 해당 일정에 취소선이 그어지고, 체크되지 않은 일정들 아래로 이동합니다.
 
-### 일정 삭제
+### Delete task
 
 <img width="24" alt="delete btn" src="https://github.com/kkh0920/To-do-list/assets/65442366/a3afc508-6c9c-4ef8-a8ee-ede722c7d7ed">
 
